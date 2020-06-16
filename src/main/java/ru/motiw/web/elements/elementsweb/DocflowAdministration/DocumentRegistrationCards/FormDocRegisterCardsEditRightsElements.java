@@ -51,7 +51,7 @@ public class FormDocRegisterCardsEditRightsElements {
     @FindBy(xpath = "(//div[contains(text(),'Доступ к разделам документа при просмотре/редактировании')]//ancestor::fieldset//input//ancestor::span)[4]")
     private SelenideElement boxAccessToSectionsDocumentLog;
 
-    @FindBy(xpath = "(//div[count(fieldset)=4]/div)[5]//input")
+    @FindBy(xpath = "//span[contains(text(),'Создание связанных документов:')]//ancestor::div[@class=\"x-field x-form-item x-form-item-default x-form-type-text x-field-default x-anchor-form-item\"]//input")
     private SelenideElement creationOfLinkedDocuments;
 
     /**

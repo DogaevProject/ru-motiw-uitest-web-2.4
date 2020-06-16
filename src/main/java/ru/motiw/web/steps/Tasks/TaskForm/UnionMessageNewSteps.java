@@ -141,7 +141,7 @@ public class UnionMessageNewSteps extends BaseSteps {
      * Проверка что появилось окно и ссылка на созданную задачу
      */
     private UnionMessageNewSteps assertWindowTaskCreated() {
-        $(By.xpath("//span[@class='ext-mb-text'][contains(text(),'Создана задача №')]")).shouldBe(Condition.visible);
+        $(By.xpath("//span[@class='ext-mb-text'][contains(text(),'Создана задача №')]")).waitUntil(Condition.visible, 20000);
         insetDescriptionTaskFormElements.getOKButtonInConfirmationFormTaskCreation().click();
         return this;
     }
