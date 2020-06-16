@@ -41,9 +41,6 @@ import static ru.motiw.web.steps.Tasks.UnionTasksSteps.goToUnionTasks;
 public class CreateDocumentMobileTest extends DocflowAdministrationMobile {
 
     private LoginStepsSteps loginPageSteps;
-    private LoginStepsMobile loginStepsMobile;
-    private InternalStepsMobile internalStepsMobile;
-    private GridOfFoldersSteps gridOfFoldersSteps;
     private InternalSteps internalPageSteps;
     private UnionTasksSteps unionTasksSteps;
     private UsersSteps userPageSteps;
@@ -51,15 +48,10 @@ public class CreateDocumentMobileTest extends DocflowAdministrationMobile {
     private FormDocRegisterCardsEditGeneralSteps formDocRegisterCardsEditGeneralSteps;
     private VerifyDocumentStepsMobile verifyDocumentStepsMobile;
     private ExecutionDocumentStepsMobile executionDocumentStepsMobile;
-    private DocumentStepsMobile documentStepsMobile;
-    private AnnotationOnFilesSteps annotationOnFilesSteps;
 
     @BeforeClass
     public void beforeTest() {
         loginPageSteps = page(LoginStepsSteps.class);
-        loginStepsMobile = page(LoginStepsMobile.class);
-        internalStepsMobile = page(InternalStepsMobile.class);
-        gridOfFoldersSteps = page(GridOfFoldersSteps.class);
         internalPageSteps = page(InternalSteps.class);
         unionTasksSteps = page(UnionTasksSteps.class);
         userPageSteps = page(UsersSteps.class);
@@ -67,8 +59,6 @@ public class CreateDocumentMobileTest extends DocflowAdministrationMobile {
         formDocRegisterCardsEditGeneralSteps = page(FormDocRegisterCardsEditGeneralSteps.class);
         verifyDocumentStepsMobile = page(VerifyDocumentStepsMobile.class);
         executionDocumentStepsMobile = page(ExecutionDocumentStepsMobile.class);
-        documentStepsMobile = page(DocumentStepsMobile.class);
-        annotationOnFilesSteps = page(AnnotationOnFilesSteps.class);
     }
 
     @Test(dataProvider = "objectDataForVerifyingCreateDocument", dataProviderClass = DocflowAdministrationMobile.class)

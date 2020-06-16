@@ -68,7 +68,7 @@ public abstract class BaseTest {
                 Configuration.browser = "chrome";
                 break;
             case "chrome_linux":
-                System.setProperty("webdriver.chrome.driver", resourcesFolder + "chromedriverForLinux");
+                System.setProperty("webdriver.chrome.driver", resourcesFolder + "chromedriver_linux");
                 Configuration.browser = "chrome";
                 Configuration.browserSize = "1920x1080";
                 break;

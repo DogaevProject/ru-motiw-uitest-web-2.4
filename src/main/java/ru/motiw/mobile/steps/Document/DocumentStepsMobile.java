@@ -1,5 +1,6 @@
 package ru.motiw.mobile.steps.Document;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import ru.motiw.mobile.elements.Documents.DocumentElementsMobile;
@@ -68,9 +69,9 @@ public class DocumentStepsMobile extends CardStepsMobile {
             elementOfOperation = gridOfFolderElementsMobile.getAllButtonsOfContextMenu();
         } else if (currentLocation == TypeOfLocation.PAGE_CARD) // Если в карточке
         {
-            elementOfOperation = documentElementsMobile.getAllButtonsOfTab();
+                documentElementsMobile.getAllButtonsOfTab().shouldHave(CollectionCondition.sizeGreaterThan(0), 5000);
+                elementOfOperation = documentElementsMobile.getAllButtonsOfTab();
         }
-
         if (elementOfOperation == null) {
             fail("Элемент для взаимодействия с операциями докмуента отсутствует");
         }
