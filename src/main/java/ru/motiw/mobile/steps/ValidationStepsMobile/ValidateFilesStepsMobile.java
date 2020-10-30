@@ -252,7 +252,7 @@ public class ValidateFilesStepsMobile extends CardStepsMobile {
             return this;
         } else {
             // сравниваем кол-во прикрепленных файлов с числом отображаемым в элементе-переключтеле файлов.
-            taskElementsMobile.getNumbersOnElementCounterFiles().shouldHave(text("1 / " + document.getNumberOfFiles()));
+            taskElementsMobile.getNumbersOnElementCounterFiles().waitUntil(visible, 20000).shouldHave(text("1 / " + document.getNumberOfFiles()));
             //Проверка файлов в каруселе
             verifyFilesInPreview(document.getValueFiles(), document.getNumberOfFiles());
         }

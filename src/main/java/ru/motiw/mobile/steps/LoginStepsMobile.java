@@ -7,6 +7,7 @@ import ru.motiw.mobile.elements.Login.LoginPageElementsMobile;
 import ru.motiw.web.model.Administration.Users.Employee;
 import ru.motiw.web.steps.BaseSteps;
 
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.page;
 
 /*
@@ -69,7 +70,7 @@ public class LoginStepsMobile extends BaseSteps {
      */
     public boolean isNotLoggedInMobile() {
         try {
-            loginPageElementsMobile.getLogon().shouldBe(Condition.visible);
+            loginPageElementsMobile.getLogon().waitUntil(visible, 20000);
             loginPageElementsMobile.getPassword().shouldBe(Condition.visible);
             loginPageElementsMobile.getLogin().shouldBe(Condition.visible);
             return true;
