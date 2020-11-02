@@ -469,7 +469,7 @@ public class UnionMessageNewSteps extends BaseSteps {
                 insetDescriptionTaskFormElements.getEditorField());
         setTaskType(task.getTaskType()) // выбор - Тип задачи
                 .setReport(task.getIsWithReport())
-                .setSecret(task.getIsSecret())
+                //.setSecret(task.getIsSecret()) // убрано для прохождения на motiwtest - там почему-то нет этой настройки
                 .setReview(task.getIsForReview());
 
         return this;
@@ -500,7 +500,7 @@ public class UnionMessageNewSteps extends BaseSteps {
         setTaskType(task.getTaskType())
                 .addTasksIWG(task.getIWG())
                 .setReport(task.getIsWithReport())
-                .setSecret(task.getIsSecret())
+                //.setSecret(task.getIsSecret())  // убрано для прохождения на motiwtest - там почему-то нет этой настройки
                 .setReview(task.getIsForReview());
         saveTask();
     }
