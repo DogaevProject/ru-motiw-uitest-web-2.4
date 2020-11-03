@@ -27,9 +27,8 @@ public class SystemInformationSteps extends BaseSteps {
      */
     public SystemInformationSteps assertNotRedElement() {
         assertFalse($(By
-                .xpath("/*//*[contains (@style, '#F83838')]")).exists());
+                .xpath("/*//*[contains (@style, '#F83838') and not(contains(text(),'Несоответствие версий базы данных')) and not(descendant::b[contains(text(),'Нет настроенных STUN серверов')])]")).exists());
         return this;
-
     }
 
     /**
