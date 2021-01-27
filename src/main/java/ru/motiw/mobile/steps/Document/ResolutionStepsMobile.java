@@ -13,8 +13,7 @@ import ru.motiw.web.model.Document.Document;
 import ru.motiw.web.model.Document.Resolution;
 import ru.motiw.web.model.Tasks.Folder;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 
 /**
@@ -79,8 +78,8 @@ public class ResolutionStepsMobile extends DocumentStepsMobile {
         // Подтверждение создания
         internalElementsMobile.getButtonInFormOfExecutionOperations(OperationsOfDocument.CREATE_RESOLUTION_IN_THE_GRID.getNameOperation()).click();
 
-        // Ожидание toast
-        internalElementsMobile.getToastWithText().waitUntil(text("Резолюция сохранена"), 30000);
+        // Ожидание закрытия Формы резолюции
+        documentElementsMobile.getFormOfResolution().waitUntil(not(visible), 30000);
         refresh();
         document.setOnExecution(true); //  Документ на исполнении
         return this;
