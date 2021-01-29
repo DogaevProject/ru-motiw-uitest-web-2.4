@@ -124,4 +124,22 @@ public class DocumentElementsMobile {
 
     }
 
+
+    /**
+     *  Панель проекта резолюции внизу
+     */
+    public SelenideElement getPanelProjectOfResolution() {
+        return $(By.xpath("//div[contains(@id, \"ext-resolution-approvepanel\")]"));
+
+    }
+
+
+    /**
+     *  Кнопка утверждения на Панели проекта резолюции внизу
+     */
+    public SelenideElement getButtonForApproveOnPanelProjectOfResolution() {
+        return $(By.xpath("//div[contains(@id, \"ext-resolution-approvepanel\")]//div[@class=\"x-container x-component x-layout-box-item x-layout-hbox-item\"]"));
+
+    }
+
 }

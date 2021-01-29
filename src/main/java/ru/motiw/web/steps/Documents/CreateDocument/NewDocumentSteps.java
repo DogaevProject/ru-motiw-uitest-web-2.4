@@ -387,7 +387,7 @@ public class NewDocumentSteps extends BaseSteps {
      *
      * @param document атрибуты (значения) документа для заполнения в форме Создания документа
      */
-    public void createDocument(Document document) {
+    public NewDocumentSteps createDocument(Document document) {
         selFieldDocumentType(document.getDocumentType()) // выбираем проинициализированный Тип документа
                 .addFiles(document.getValueFiles()) // Добавление файлов
                 .writeInRegistrationDate(document.getDateRegistration()) // Дата регистрации
@@ -401,6 +401,7 @@ public class NewDocumentSteps extends BaseSteps {
 
         saveAndCreateNewDocument() // Сохранить и создать новый документ
                 .assertVerifyCreateDoc(); // Проверяем создание документа
+        return this;
     }
 
     /**
@@ -411,11 +412,11 @@ public class NewDocumentSteps extends BaseSteps {
     private void toAddaUserToRoutingScheme(SelenideElement addAUserToARole,
                                            Employee[] userRoutes, String reviewDuration) {
         for (Employee userRoute : userRoutes) {
-        addAUserToARole.click(); // Добавить пользователя в маршрут
-        // Window PopUp
-        String parentWindowHandler = getWebDriver().getWindowHandle(); // Store your parent window
-        switchTo().window(new WebDriverWait(getWebDriver(), 10)
-                .until(newWindowForm(By.cssSelector("#serverSearch"))));
+            addAUserToARole.click(); // Добавить пользователя в маршрут
+            // Window PopUp
+            String parentWindowHandler = getWebDriver().getWindowHandle(); // Store your parent window
+            switchTo().window(new WebDriverWait(getWebDriver(), 10)
+                    .until(newWindowForm(By.cssSelector("#serverSearch"))));
             usersSelectTheFormElements.getUserSearchField().setValue(userRoute.getLastName());
             usersSelectTheFormElements.getUserSearchField().pressEnter();
             if (usersSelectTheFormElements.getUserSaveButton().exists()) {
@@ -436,6 +437,15 @@ public class NewDocumentSteps extends BaseSteps {
         routeTableGridElements.getInputReviewDuration().setValue(reviewDuration);
 
 
+    }
+
+
+    /**
+     * Переходим в созданный документ по ссылке - Зарегистрировано, документ находится на рассмотрении - после сохранения документа
+     */
+    public NewDocumentSteps openCreatedDoc() {
+        $(By.xpath("//a[@class='error_message' and @style='text-decoration:none']")).click();
+        return this;
     }
 
 

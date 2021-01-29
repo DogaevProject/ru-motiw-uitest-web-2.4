@@ -1,7 +1,9 @@
 package ru.motiw.mobile.steps.Document;
 
 import com.codeborne.selenide.CollectionCondition;
+import org.openqa.selenium.By;
 import ru.motiw.mobile.elements.Documents.DocumentElementsMobile;
+import ru.motiw.mobile.elements.Internal.FilesPreviewElementsMobile;
 import ru.motiw.mobile.elements.Internal.GridOfFolderElementsMobile;
 import ru.motiw.mobile.elements.Internal.InternalElementsMobile;
 import ru.motiw.mobile.elements.Tasks.TaskElementsMobile;
@@ -25,6 +27,7 @@ public class ResolutionStepsMobile extends DocumentStepsMobile {
     private GridOfFoldersSteps gridOfFoldersSteps = page(GridOfFoldersSteps.class);
     private TaskElementsMobile taskElementsMobile = page(TaskElementsMobile.class);
     private GridOfFolderElementsMobile gridOfFolderElementsMobile = page(GridOfFolderElementsMobile.class);
+    private FilesPreviewElementsMobile filesPreviewElementsMobile = page(FilesPreviewElementsMobile.class);
 
     /**
      * Массовое создание всех резолюций, которые содержаться в объекте Document
@@ -100,6 +103,45 @@ public class ResolutionStepsMobile extends DocumentStepsMobile {
         documentElementsMobile.getAuthorsOfResolutionInCertainItem(resolution.getTextOfResolution()).shouldHave(text(resolution.getAuthorDefault().getLastName()));
         documentElementsMobile.getButtonOfTab(OperationsOfDocument.LIST_OF_RESOLUTION.getNameOperation()).click(); // Закрываем список
 
+        return this;
+    }
+
+    /**
+     * Утверждение проекта резолюции по панели расположенной внизу
+     */
+    public ResolutionStepsMobile approveProjectOfResolution() {
+        documentElementsMobile.getPanelProjectOfResolution().waitUntil(visible, 10000);
+        documentElementsMobile.getButtonForApproveOnPanelProjectOfResolution().waitUntil(visible, 10000).click();
+        documentElementsMobile.getPanelProjectOfResolution().waitUntil(not(visible), 10000);
+        return this;
+    }
+
+
+    /**
+     * Утверждение проекта резолюции по панели расположенной внизу
+     * TODO Проверка текста резолюции на панели
+     *
+     */
+   /* public ResolutionStepsMobile approveProjectOfResolution(Resolution resolution) {
+        documentElementsMobile.getPanelProjectOfResolution().waitUntil(visible, 10000);
+
+        // TODO Проверка текста резолюции на панели
+
+        documentElementsMobile.getButtonForApproveOnPanelProjectOfResolution().waitUntil(visible, 10000).click();
+        documentElementsMobile.getPanelProjectOfResolution().waitUntil(not(visible), 10000);
+        return this;
+    }*/
+
+    /**
+     * Проверка отсутствия панели для утверждения проекта резолюции расположенной внизу
+     */
+    public ResolutionStepsMobile verifyThatNotHavePanelProjectOfResolution() {
+        $(By.xpath("//iframe")).waitUntil(exist, 20000);
+        switchTo().frame($(By.xpath("//iframe")));  //Переходим во фрейм просмотра файлов
+        filesPreviewElementsMobile.getPdfViewer().waitUntil(exist, 20000);
+        sleep(2000);
+        switchTo().defaultContent();  //Уходим из фрейма просмотра файлов
+        documentElementsMobile.getPanelProjectOfResolution().shouldNotBe(visible);
         return this;
     }
 

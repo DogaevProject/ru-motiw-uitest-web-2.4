@@ -14,7 +14,17 @@ import static com.codeborne.selenide.Selenide.$$;
 public class FilesPreviewElementsMobile extends BaseSteps {
 
     /**
-     *  Панель инструментов граф.комменатриев
+     * Элемент просмотрщика файлов pdfjs, который появляется, когда загружен файл
+     *
+     * @return
+     */
+    public SelenideElement getPdfViewer() {
+        return $(By.xpath("//div[@class=\"pdfViewer\"]"));
+    }
+
+
+    /**
+     * Панель инструментов граф.комменатриев
      *
      * @return
      */
@@ -59,7 +69,9 @@ public class FilesPreviewElementsMobile extends BaseSteps {
     }
 
 
-    public SelenideElement getPan() { return $(By.xpath("//*[@class=\"annotation-controls pen-mode-button\"]"));}
+    public SelenideElement getPan() {
+        return $(By.xpath("//*[@class=\"annotation-controls pen-mode-button\"]"));
+    }
 
     public SelenideElement getMarker() {
         return $(By.xpath("//*[@class=\"annotation-controls marker-mode-button\"]"));
@@ -70,7 +82,8 @@ public class FilesPreviewElementsMobile extends BaseSteps {
     }
 
     public SelenideElement getPanActive() {
-        return $(By.xpath("//*[@class=\"annotation-controls pen-mode-button active\"]"));}
+        return $(By.xpath("//*[@class=\"annotation-controls pen-mode-button active\"]"));
+    }
 
     public SelenideElement getMarkerActive() {
         return $(By.xpath("//*[@class=\"annotation-controls marker-mode-button active\"]"));
