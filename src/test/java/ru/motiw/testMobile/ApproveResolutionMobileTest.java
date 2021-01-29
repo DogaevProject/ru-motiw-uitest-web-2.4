@@ -210,7 +210,7 @@ public class ApproveResolutionMobileTest extends TestsOfResolutionsMobile {
         // Ожидание и проверка кнопок тулбара
         formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);
         // Выполнение операций
-        resolutionStepsMobile.approveProjectOfResolution(document.getResolutionOfDocument()[0]);
+        resolutionStepsMobile.approveProjectOfResolution();
         // Проверяем что проект утвержден
         internalStepsMobile.logout();
         loginStepsMobile
