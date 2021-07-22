@@ -19,8 +19,7 @@ import ru.motiw.mobile.steps.ValidationStepsMobile.ValidateFilesStepsMobile;
 import java.util.ArrayList;
 
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.page;
-import static com.codeborne.selenide.Selenide.sleep;
+import static com.codeborne.selenide.Selenide.*;
 import static org.testng.AssertJUnit.fail;
 
 
@@ -69,7 +68,11 @@ public class DocumentStepsMobile extends CardStepsMobile {
             elementOfOperation = gridOfFolderElementsMobile.getAllButtonsOfContextMenu();
         } else if (currentLocation == TypeOfLocation.PAGE_CARD) // Если в карточке
         {
-                documentElementsMobile.getAllButtonsOfTab().shouldHave(CollectionCondition.sizeGreaterThan(0), 5000);
+            // кнопки на тулбаре могут иногда не загрузится
+            if (documentElementsMobile.getAllButtonsOfTab().size() < 1) {
+                refresh();
+            }
+                documentElementsMobile.getAllButtonsOfTab().shouldHave(CollectionCondition.sizeGreaterThan(0), 10000);
                 elementOfOperation = documentElementsMobile.getAllButtonsOfTab();
         }
         if (elementOfOperation == null) {
