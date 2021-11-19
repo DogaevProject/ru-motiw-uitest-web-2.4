@@ -89,6 +89,7 @@ public class NewRecordDirectoriesSteps extends BaseSteps {
                 }
                 $(By.xpath("//div[contains(text(),'" + directoriesItem.getFieldName() + "')]")).click(); //Убираем курсор с поля
                 editDirectoriesElements.getSaveButton().click(); // Сохранить
+                switchTo().defaultContent();
                 editDirectoriesElements.getTextOfSuccessefullSave().waitUntil(visible, 10000); // Окно после добавления записи "Запись успешно сохранена"
                 editDirectoriesElements.getOkButton().click(); // "ОК" в форме подтверждения
                 editDirectoriesElements.getRecordInGrid(directoriesItem.getDirectoriesItem()).waitUntil(visible, 1000); // Проверяем отображение в гриде
