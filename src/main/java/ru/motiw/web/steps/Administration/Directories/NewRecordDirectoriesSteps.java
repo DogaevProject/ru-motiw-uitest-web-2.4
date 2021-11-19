@@ -72,8 +72,8 @@ public class NewRecordDirectoriesSteps extends BaseSteps {
             if (directoriesItem.getFieldType() instanceof TypeListFieldsString) {
                 try {
                     editDirectoriesElements.getAddRecordButton().click(); // Добавить запись
-                } catch (Error ignored){
-                    if (editDirectoriesElements.getAddRecordButton().isDisplayed()){
+                } catch (Error ignored) {
+                    if (editDirectoriesElements.getAddRecordButton().isDisplayed()) {
                         editDirectoriesElements.getAddRecordButton().click(); // Добавить запись
                     } else fail();
                 }

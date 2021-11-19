@@ -408,6 +408,7 @@ public class UnionMessageNewSteps extends BaseSteps {
                 iwgFormElements.getButtonIwgSave().click();
                 verifyCreateIWG(anIwg.getNameIWG()); // Проверяем отображение ИРГ в гриде
             }
+            switchTo().defaultContent();
             switchTo().frame($(By.cssSelector("#flow"))); // возвращаемся в основной фрейм для дальнейшей работы в задаче
         }
         return this;
