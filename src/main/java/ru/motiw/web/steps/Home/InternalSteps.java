@@ -17,6 +17,7 @@ import static com.codeborne.selenide.Condition.appear;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Configuration.baseUrl;
 import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.WebDriverRunner.clearBrowserCache;
 import static org.testng.AssertJUnit.fail;
 import static ru.motiw.web.model.URLMenu.INTERNAL_MENU;
 
@@ -110,6 +111,7 @@ public class InternalSteps extends BaseSteps {
                 fail("AWTException");
             }
         }
+        clearBrowserCache(); //чистим кеш
     }
 
     /**
