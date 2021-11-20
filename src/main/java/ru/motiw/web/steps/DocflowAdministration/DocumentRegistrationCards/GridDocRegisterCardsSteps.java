@@ -1,14 +1,13 @@
 package ru.motiw.web.steps.DocflowAdministration.DocumentRegistrationCards;
 
+import com.codeborne.selenide.ex.ElementNotFound;
 import org.openqa.selenium.By;
 import ru.motiw.web.steps.BaseSteps;
 import ru.motiw.web.elements.elementsweb.DocflowAdministration.DocumentRegistrationCards.GridDocRegisterCardsElements;
 
 import static com.codeborne.selenide.Condition.disappear;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.page;
-import static com.codeborne.selenide.Selenide.sleep;
+import static com.codeborne.selenide.Selenide.*;
 import static ru.motiw.web.model.URLMenu.DOCUMENT_REGISTER_CARDS;
 
 /**
@@ -41,8 +40,13 @@ public class GridDocRegisterCardsSteps extends BaseSteps {
      */
     public GridDocRegisterCardsSteps verifyDocRegisterCards(
             String ObjectDocRegisterCards) {
+        try {
+            $(gridDocRegisterCardsElements.getAddOnRegCards()).waitUntil(visible, 20000); // ждем загрузку страницы списка РКД
+        } catch (ElementNotFound e) {
+            openSectionOnURL(DOCUMENT_REGISTER_CARDS.getMenuURL()); // перезагружаем страницу в случае зависания ответа сервера после сохранения ркд
+        }
         $(By.xpath("//div[@class='x-grid-item-container']//span[contains(text(),'"
-                + ObjectDocRegisterCards + "')]")).shouldBe(visible);
+                + ObjectDocRegisterCards + "')]")).waitUntil(visible, 5000);
         return this;
     }
 
