@@ -1,7 +1,10 @@
 package ru.motiw.web.elements.elementsweb.Tasks.UnionTasks;
 
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindBy;
+
+import static com.codeborne.selenide.Selenide.$;
 
 /**
  * Элементы - Форма редактирования - ПАПКА
@@ -69,6 +72,11 @@ public class EditFormFoldersElements {
         return folderName;
     }
 
-
+    /**
+     * Кнопка закрытия Формы редактирования папки
+     */
+    public SelenideElement getCloseEditFormOfFolder() {
+        return $(By.xpath("//div[@class=\"x-tool-tool-el x-tool-img x-tool-close \"]"));
+    }
 
 }

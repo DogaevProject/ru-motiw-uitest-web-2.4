@@ -2,6 +2,7 @@ package ru.motiw.web.steps.Tasks;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.ex.ElementNotFound;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -117,8 +118,16 @@ public class UnionTasksSteps extends BaseSteps {
      *
      * @param nameFolder зн-ие для формирования имени папки
      */
-    private UnionTasksSteps enterTheNameOfTheFolder(String nameFolder) {
-        sleep(1000);
+    private UnionTasksSteps enterTheNameOfTheFolder(String nameFolder, Folder folder) {
+        try {
+            editFormFoldersElements.getFolderName().waitUntil(visible, 5000);
+        } catch (ElementNotFound e) {
+            switchTo().defaultContent();
+            switchTo().frame($(By.cssSelector("#flow")));
+            editFormFoldersElements.getCloseEditFormOfFolder().click();
+            openEditFormOfFolder(folder);
+            editFormFoldersElements.getFolderName().waitUntil(visible, 5000);
+        }
         editFormFoldersElements.getFolderName().clear();
         editFormFoldersElements.getFolderName().setValue(nameFolder);
         return this;
@@ -185,6 +194,20 @@ public class UnionTasksSteps extends BaseSteps {
     }
 
     /**
+     * Открытие Формы редактирования папки
+     */
+    private void openEditFormOfFolder(Folder folder) {
+        if (folder.getParentFolder() != null) {
+            selectTheParentFolder(folder.getParentFolder()); // Выбираем родительскую папку папку и выводим КМ для взаимодействия с папкой
+        } else {
+            waitMaskForGridTask();
+            unionTasksElements.getFolderInTheGroup().first().contextClick();
+        }
+        unionTasksElements.getAddFolder().click(); // Добавить папку
+        getFrameObject($(By.xpath("//iframe[contains(@src,'/user/smart_folder')]"))); // уходим во фрейм окна - Редактирование папки
+    }
+
+    /**
      * Добавление объекта - Папка
      *
      * @param folders кол-во передаваемых папок с атрибутами (настройки СП (смарт-папки); ОП (общие папки)..)
@@ -192,15 +215,8 @@ public class UnionTasksSteps extends BaseSteps {
     public void addFolders(Folder[] folders) {
         if (folders != null) {
             for (Folder folder : folders) {
-                if (folder.getParentFolder() != null) {
-                    selectTheParentFolder(folder.getParentFolder()); // Выбираем родительскую папку папку и выводим КМ для взаимодействия с папкой
-                } else {
-                    waitMaskForGridTask();
-                    unionTasksElements.getFolderInTheGroup().first().contextClick();
-                }
-                unionTasksElements.getAddFolder().click(); // Добавить папку
-                getFrameObject($(By.xpath("//iframe[contains(@src,'/user/smart_folder')]"))); // уходим во фрейм окна - Редактирование папки
-                enterTheNameOfTheFolder(folder.getNameFolder());
+                openEditFormOfFolder(folder);
+                enterTheNameOfTheFolder(folder.getNameFolder(), folder);
                 if (folder.isUseFilter() & folder.isChooseRelativeValue()) {
                     editFormFoldersElements.getCheckUseFilter().click();
                     setTheConditionOfFiltration(folder.getFilterField(), folder.isChooseRelativeValue());
