@@ -112,7 +112,7 @@ public class ResolutionStepsMobile extends DocumentStepsMobile {
     public ResolutionStepsMobile approveProjectOfResolution() {
         documentElementsMobile.getPanelProjectOfResolution().waitUntil(visible, 10000);
         documentElementsMobile.getButtonForApproveOnPanelProjectOfResolution().waitUntil(visible, 10000).click();
-        documentElementsMobile.getPanelProjectOfResolution().waitUntil(not(visible), 10000);
+        documentElementsMobile.getPanelProjectOfResolution().waitUntil(not(visible), 20000);
         return this;
     }
 
