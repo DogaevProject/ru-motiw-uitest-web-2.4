@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import static com.codeborne.selenide.Condition.selected;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Configuration.baseUrl;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
@@ -71,6 +72,7 @@ public abstract class BaseSteps {
      * @param tabNames        передаваемое имя вкладок для проверки отображение в форме
      */
     protected static void checkDisplayedTabsInTheShapeOfAnObject(By tabsLocator, int numberOfTabs, By tabsNameLocator, String[] tabNames) {
+        $$(tabsLocator).first().waitUntil(visible, 10000);
         $$(tabsLocator).shouldBe(CollectionCondition.size(numberOfTabs)); // проверка отображения кол-во вкладок
         $$(tabsNameLocator).shouldHave(CollectionCondition.exactTexts(tabNames));
     }
@@ -92,10 +94,10 @@ public abstract class BaseSteps {
      * @param objectName имя передаваемого объекта
      */
     protected void clickTheObjectInGrid(String objectName) {
-        SelenideElement element = $(By.xpath("//*[text()='" + objectName + "'][ancestor::table]"))
+        SelenideElement element = $(By.xpath("//*[text()='" + objectName + "']//ancestor::td"))
                 .waitUntil(Condition.visible, 10000);
         element.scrollTo();
-        $(By.xpath("//*[text()='" + objectName + "'][ancestor::table]")).click();
+        $(By.xpath("//*[text()='" + objectName + "']//ancestor::td")).click();
     }
 
     /**

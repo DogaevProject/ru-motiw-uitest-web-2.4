@@ -1,7 +1,10 @@
 package ru.motiw.web.elements.elementsweb.Administration;
 
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindBy;
+
+import static com.codeborne.selenide.Selenide.$;
 
 /**
  * Элементы грида - Типов объектов
@@ -79,5 +82,13 @@ public class TaskTypeListElements {
     public SelenideElement getRemoveTypesObject() {
         return removeTypesObject;
     }
+
+    /**
+     * Область вне записей грида (при клике на нее снятие фокуса с выбранной записи)
+     */
+    public SelenideElement getSpaceWithoutItem() {
+        return $(By.xpath("//div[@class=\"x-panel-body x-grid-no-row-lines x-grid-body x-panel-body-default x-panel-body-default x-noborder-rl\"]"));
+    }
+
 }
 
