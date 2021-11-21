@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.testng.AssertJUnit;
 import ru.motiw.web.elements.elementsweb.Administration.Users.DepartmentElements;
 import ru.motiw.web.elements.elementsweb.Administration.Users.UsersElements;
 import ru.motiw.web.elements.elementsweb.Internal.InternalElements;
@@ -152,15 +153,27 @@ public class UsersSteps extends DepartmentSteps {
     }
 
     /**
-     * Проверяем что пользователь отображается в гриде после создания
+     * Проверяем что пользователь отображается в гриде
      *
      * @param user передаваемые атрибуты пользователя
      */
-    private UsersSteps verifyCreateUser(Employee user) {
+    private UsersSteps verifyUserInGrid(Employee user) {
         $(By.xpath("//tbody[contains(@id,'gridview')]/tr//a[text()='"
                 + user.getLastName() + " " + user.getName() + " "
                 + user.getPatronymic() + "']")).waitUntil(visible, 15000);
         return this;
+    }
+
+    /**
+     * Проверяем что пользователь отображается в гриде
+     *
+     * @param user передаваемые атрибуты пользователя
+     */
+    private boolean userIsInGrid(Employee user) {
+        waitForMask();
+        return $(By.xpath("//tbody[contains(@id,'gridview')]/tr//a[text()='"
+                + user.getLastName() + " " + user.getName() + " "
+                + user.getPatronymic() + "']")).isDisplayed();
     }
 
     /**
@@ -328,6 +341,31 @@ public class UsersSteps extends DepartmentSteps {
         assertHasAlias(user, department);
     }
 
+    /**
+     * Заполнение полей карточки пользователя при создании и редактировании
+     *
+     * @param user
+     */
+    private void fillFieldsOfCardUser(Employee user) {
+        usersElements.getLastName().waitUntil(visible, 5000);
+        setEntryField(usersElements.getLastName(), user.getLastName()) // Фамилия
+                .setEntryField(usersElements.getName(), user.getName()) // Имя
+                .setEntryField(usersElements.getPatronymic(), user.getPatronymic()) // Отчество
+                .sex(user.getSex())
+                .setEntryField(usersElements.getBirthDateField(), user.getBirthDate()) // Дата рождения
+                .setEntryField(usersElements.getJobTitle(), user.getJobTitle()) // Должность
+                .setNameUserLogin(user.getLoginName())
+                .setPasswordUser(user.getPassword())
+                .setConfirmationPassword(user.getСonfirmationPassword())
+                .setStatus(user.getStatus())
+                .selModule(user.getModule());
+        rangeOfFieldsAndFillingInDetails(usersElements.getAdditionalNumber(), usersElements.getVisibleEditor(),
+                user.getAdditionalNumber()); // Доп. номер
+        rangeOfFieldsAndFillingInDetails(usersElements.getUserForcedSorting(), usersElements.getVisibleEditor(),
+                user.getUserForcedSorting()); // Порядок пользователя при принудительной сортировке
+        needPasswordChange(user.getNeedsPasswordChange());
+    }
+
     public void beforeCreationDepartmentsAndUsers() {
         super.beforeCreationDepartmentsAndUsers();
     }
@@ -345,27 +383,29 @@ public class UsersSteps extends DepartmentSteps {
         usersElements.getButtonAddUser().click(); // Добавить пользователя
 
         switchTo().frame($(By.xpath("//iframe[contains(@id,'component-')]")));
-        sleep(500);
-        setEntryField(usersElements.getLastName(), user.getLastName()) // Фамилия
-                .setEntryField(usersElements.getName(), user.getName()) // Имя
-                .setEntryField(usersElements.getPatronymic(), user.getPatronymic()) // Отчество
-                .sex(user.getSex())
-                .setEntryField(usersElements.getBirthDateField(), user.getBirthDate()) // Дата рождения
-                .setEntryField(usersElements.getJobTitle(), user.getJobTitle()) // Должность
-                .setNameUserLogin(user.getLoginName())
-                .setPasswordUser(user.getPassword())
-                .setConfirmationPassword(user.getСonfirmationPassword())
-                .setStatus(user.getStatus())
-                .selModule(user.getModule());
-        rangeOfFieldsAndFillingInDetails(usersElements.getAdditionalNumber(), usersElements.getVisibleEditor(),
-                user.getAdditionalNumber()); // Доп. номер
-        rangeOfFieldsAndFillingInDetails(usersElements.getUserForcedSorting(), usersElements.getVisibleEditor(),
-                user.getUserForcedSorting()); // Порядок пользователя при принудительной сортировке
-        needPasswordChange(user.getNeedsPasswordChange())
-                .saveUser();
+        fillFieldsOfCardUser(user);
+        try {
+            saveUser();
+        } catch (AssertionError e) {
+            // Обработка случая зависания ответа сервера в момент сохранения
+            goToURLDepartments();
+            //выполняем действия повторно
+            beforeCreationDepartmentsAndUsers();
+            if (user.getDepartment() != null) {
+                selectTheParentUnit(user.getDepartment()); // Выбираем подразделение
+            }
+            // проверяем сохранился ли добавленный пользователь в гриде
+            if (!userIsInGrid(user)) {
+                // если нет, то пробуем добавить снова
+                usersElements.getButtonAddUser().click(); // Добавить пользователя
+                switchTo().frame($(By.xpath("//iframe[contains(@id,'component-')]")));
+                fillFieldsOfCardUser(user);
+                saveUser();
+            }
+        }
         switchTo().defaultContent();
         switchTo().frame($(By.cssSelector("#flow")));
-        verifyCreateUser(user);
+        AssertJUnit.assertTrue(userIsInGrid(user));
         return this;
     }
 
@@ -380,27 +420,27 @@ public class UsersSteps extends DepartmentSteps {
         selectTheParentUnit(user.getDepartment());
         clickEditUserFormByName(user); // выбираем пользователя в гриде для редактирования
         getFrameObject($(By.xpath("//iframe[contains(@id,'component-')]"))); // Переходим в iframe формы добавления пользователя
-
-        setEntryField(usersElements.getLastName(), editUser.getLastName()) // Фамилия
-                .setEntryField(usersElements.getName(), editUser.getName()) // Имя
-                .setEntryField(usersElements.getPatronymic(), editUser.getPatronymic()) // Отчество
-                .sex(editUser.getSex())
-                .setEntryField(usersElements.getBirthDateField(), editUser.getBirthDate()) // Дата рождения
-                .setEntryField(usersElements.getJobTitle(), editUser.getJobTitle()) // Должность
-                .setNameUserLogin(editUser.getLoginName())
-                .setPasswordUser(editUser.getPassword())
-                .setConfirmationPassword(editUser.getСonfirmationPassword())
-                .setStatus(editUser.getStatus())
-                .selModule(editUser.getModule());
-        rangeOfFieldsAndFillingInDetails(usersElements.getAdditionalNumber(), usersElements.getVisibleEditor(),
-                editUser.getAdditionalNumber()); // Доп. номер
-        rangeOfFieldsAndFillingInDetails(usersElements.getUserForcedSorting(), usersElements.getVisibleEditor(),
-                editUser.getUserForcedSorting()); // Порядок пользователя при принудительной сортировке
-        needPasswordChange(editUser.getNeedsPasswordChange())
-                .saveUser();
+        fillFieldsOfCardUser(editUser);
+        try {
+            saveUser();
+        } catch (AssertionError e) {
+            // Обработка случая зависания ответа сервера в момент сохранения
+            goToURLDepartments();
+            //выполняем действия повторно
+            beforeCreationDepartmentsAndUsers();
+            selectTheParentUnit(user.getDepartment());
+            // проверяем сохранился ли отредактированный пользователь в гриде
+            if (!userIsInGrid(editUser)) {
+                // если нет, то пробуем редактировать снова
+                clickEditUserFormByName(user); // выбираем пользователя в гриде для редактирования
+                getFrameObject($(By.xpath("//iframe[contains(@id,'component-')]"))); // Переходим в iframe формы добавления пользователя
+                fillFieldsOfCardUser(editUser);
+                saveUser();
+            }
+        }
         switchTo().defaultContent();
         switchTo().frame($(By.cssSelector("#flow")));
-        verifyCreateUser(editUser);
+        AssertJUnit.assertTrue(userIsInGrid(editUser));
         return this;
     }
 }

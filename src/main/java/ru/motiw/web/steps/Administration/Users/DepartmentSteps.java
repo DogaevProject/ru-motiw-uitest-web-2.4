@@ -222,7 +222,7 @@ public class DepartmentSteps extends BaseSteps {
      * (Проверка загрузки страницы, раскрытие всех элементов дерева подразделений)
      */
     public void beforeCreationDepartmentsAndUsers() {
-        //todo иногда здесь происходит ошибка
+        departmentElements.getFirstDepartments().waitUntil(Condition.visible, 10000);
         unwrapAllNodes(departmentElements.getClosedNode(),
                 By.xpath("//tr[not(contains(@class, 'expanded'))]//img[contains (@class, 'expander')]"));
         choiceOfTheParentUnit(); // выбираем корневое подразделение

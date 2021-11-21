@@ -391,8 +391,8 @@ public class NewDocumentSteps extends BaseSteps {
         selFieldDocumentType(document.getDocumentType()) // выбираем проинициализированный Тип документа
                 .addFiles(document.getValueFiles()) // Добавление файлов
                 .writeInRegistrationDate(document.getDateRegistration()) // Дата регистрации
-                .createProject(document.getProject()) // добавляем новый проект
                 .fillCustomFieldsDocument(document.getDocumentFields()) // заполнение пользовательских полей документа
+                .createProject(document.getProject()) // добавляем новый проект
                 .routeTab() // Выбор вкладки - Маршруты
                 .routeSelectionByName(document.getRouteSchemeForDocument().getNameRouteScheme());
 
