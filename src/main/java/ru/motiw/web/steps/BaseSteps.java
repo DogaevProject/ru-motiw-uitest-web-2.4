@@ -87,6 +87,18 @@ public abstract class BaseSteps {
     }
 
     /**
+     * Выбор объекта в гриде
+     *
+     * @param objectName имя передаваемого объекта
+     */
+    protected void clickTheObjectInGrid(String objectName) {
+        SelenideElement element = $(By.xpath("//*[text()='" + objectName + "'][ancestor::table]"))
+                .waitUntil(Condition.visible, 10000);
+        element.scrollTo();
+        $(By.xpath("//*[text()='" + objectName + "'][ancestor::table]")).click();
+    }
+
+    /**
      * Заполнение текстового поля, с предварительной очисткой
      * <input type="text">
      *

@@ -1,6 +1,8 @@
 package ru.motiw.web.steps.Administration.TasksTypes;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.ex.ElementNotFound;
 import org.openqa.selenium.By;
 import ru.motiw.web.elements.elementsweb.Administration.DirectionOfDateBiasingElements;
 import ru.motiw.web.elements.elementsweb.Administration.SettingsECPElements;
@@ -12,10 +14,11 @@ import ru.motiw.web.model.OpenFilesForEdit;
 import ru.motiw.web.model.ShiftDirection;
 import ru.motiw.web.steps.Administration.TaskTypeListEditSteps;
 
-import static com.codeborne.selenide.Selenide.page;
+import static com.codeborne.selenide.Selenide.*;
 import static ru.motiw.utils.ElementUtil.offsetAndRangeOfValuesOnTheList;
 import static ru.motiw.web.model.CorrectionMethod.*;
 import static ru.motiw.web.model.ShiftDirection.*;
+import static ru.motiw.web.steps.Administration.TasksTypes.TaskTypesSteps.goToURLTaskTypes;
 
 /**
  * Форма редактирования - Типы Задач
@@ -255,12 +258,25 @@ public class TaskTypesEditSteps extends TaskTypeListEditSteps {
      */
     @Override
     public TaskTypeListEditSteps addAllFieldsTaskTypeList(TaskTypeListEditObject tasksTypes) {
-        checkDisplayedTabsInTheShapeOfAnObject(By.xpath("//a/ancestor::div[contains(@id,'tabbar')]//a"), 8,
-                By.xpath("//a/ancestor::div[contains(@id,'tabbar')]//a//span[text()]"), new String[]{"Настройки", "Поля", "Обработчики", "Настройки почтовых уведомлений",
-                        "Дополнительно", "Доступ", "Форматы", "Шаблоны отображения"});
+        verifyThatTaskTypeOpen(tasksTypes);
         taskTypesEditElements.getFieldsTab().click(); // Вкладка - Поля
         super.addAllFieldsTaskTypeList(tasksTypes); // Добавление полей
         return this;
+    }
+
+    /**
+     * Проверка что форма добавления/редактирования Типа задачи открылась
+     */
+    private void verifyThatTaskTypeOpen(TaskTypeListEditObject tasksTypes) {
+        try {
+            $(By.xpath("//a/ancestor::div[contains(@id,'tabbar')]//a")).waitUntil(Condition.visible, 10000);
+        } catch (ElementNotFound e) {
+            // Обработка случая зависания ответа сервера после сохранения, пробуем открыть форму Типа задачи повторно
+            goToURLTaskTypes().editObjectTaskTypeList(tasksTypes.getObjectTypeName());
+        }
+        checkDisplayedTabsInTheShapeOfAnObject(By.xpath("//a/ancestor::div[contains(@id,'tabbar')]//a"), 8,
+                By.xpath("//a/ancestor::div[contains(@id,'tabbar')]//a//span[text()]"), new String[]{"Настройки", "Поля", "Обработчики", "Настройки почтовых уведомлений",
+                        "Дополнительно", "Доступ", "Форматы", "Шаблоны отображения"});
     }
 
 

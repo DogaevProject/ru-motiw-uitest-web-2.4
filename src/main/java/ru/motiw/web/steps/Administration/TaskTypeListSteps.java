@@ -35,6 +35,7 @@ public abstract class TaskTypeListSteps extends BaseSteps {
      * @param nameObject передаваемое имя объекта
      */
     public void editObjectTaskTypeList(String nameObject) {
+        clickTheObjectInGrid(nameObject);
         taskTypeListElements.getEditTypesObject().click();
     }
 
