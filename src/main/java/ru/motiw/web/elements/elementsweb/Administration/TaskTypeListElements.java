@@ -1,10 +1,12 @@
 package ru.motiw.web.elements.elementsweb.Administration;
 
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindBy;
 
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
 
 /**
  * Элементы грида - Типов объектов
@@ -77,6 +79,15 @@ public class TaskTypeListElements {
     }
 
     /**
+     * Неактивная кнопка "Редактировать" в гриде
+     */
+    public SelenideElement getEditDisabledButton() {
+        return $(By.xpath("//a[@class=\"x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-toolbar-small x-item-disabled x-btn-disabled\" and @data-qtip=\"Редактировать\" and @aria-disabled=\"true\"]"));
+
+    }
+
+
+    /**
      * Удалить объект (кнопка "Удалить" в гриде)
      */
     public SelenideElement getRemoveTypesObject() {
@@ -88,6 +99,13 @@ public class TaskTypeListElements {
      */
     public SelenideElement getSpaceWithoutItem() {
         return $(By.xpath("//div[@class=\"x-panel-body x-grid-no-row-lines x-grid-body x-panel-body-default x-panel-body-default x-noborder-rl\"]"));
+    }
+
+    /**
+     * Все записи в гриде
+     */
+    public ElementsCollection getAllItems() {
+        return $$(By.xpath("//div[@class=\"x-grid-item-container\"]//table"));
     }
 
 }
