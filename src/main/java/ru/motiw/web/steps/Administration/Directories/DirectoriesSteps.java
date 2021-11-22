@@ -6,8 +6,7 @@ import ru.motiw.web.elements.elementsweb.Administration.TaskTypeListElements;
 import ru.motiw.web.steps.Administration.TaskTypeListSteps;
 
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.page;
+import static com.codeborne.selenide.Selenide.*;
 import static ru.motiw.web.model.URLMenu.DICTIONARY;
 
 /**
@@ -32,20 +31,7 @@ public class DirectoriesSteps extends TaskTypeListSteps {
      */
     @Override
     public void addObjectTaskTypeList(String nameDirectories) {
-        taskTypeListElements.getAddTypesObject().waitUntil(visible, 2000).click();
-        try {
-            $(taskTypeListElements.getNameObject()).waitUntil(visible, 20000).setValue(nameDirectories);
-        } catch (ElementNotFound e) {
-            // Обработка случая когда кнопка "Добавить" с первого раза не открывает форму Добавления Справочника
-            // выбрать запись в гриде
-            clickTheObjectInGrid("Города");
-            // снять фокус с записи
-            taskTypeListElements.getSpaceWithoutItem().click();
-            // повторяем нажатие на кнопку
-            taskTypeListElements.getAddTypesObject().click();
-            $(taskTypeListElements.getNameObject()).waitUntil(visible, 20000).setValue(nameDirectories);
-        }
-        taskTypeListElements.getOkAddObject().click();
+       super.addObjectTaskTypeList(nameDirectories);
     }
 
     /**

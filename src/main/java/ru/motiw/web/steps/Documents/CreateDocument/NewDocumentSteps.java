@@ -377,7 +377,7 @@ public class NewDocumentSteps extends BaseSteps {
      * Проверяем отображение надписи - Зарегистрировано, документ находится на рассмотрении - после сохранения документа
      */
     private NewDocumentSteps assertVerifyCreateDoc() {
-        $(By.xpath("//a[@class='error_message' and @style='text-decoration:none']")).shouldBe(visible);
+        $(By.xpath("//a[@class='error_message' and @style='text-decoration:none']")).waitUntil(visible,20000);
         return this;
     }
 

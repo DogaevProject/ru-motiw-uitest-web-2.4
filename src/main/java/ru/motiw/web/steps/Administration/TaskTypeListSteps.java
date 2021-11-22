@@ -23,7 +23,9 @@ public abstract class TaskTypeListSteps extends BaseSteps {
      * @param nameObject передаваемое имя объекта
      */
     public void addObjectTaskTypeList(String nameObject) {
-        sleep(2000);
+        taskTypeListElements.getAddTypesObject().click();
+        taskTypeListElements.getSpaceWithoutItem().click();
+        // повторяем нажатие на кнопку, с первого раза не успевает сработать
         taskTypeListElements.getAddTypesObject().click();
         $(taskTypeListElements.getNameObject()).shouldBe(visible).setValue(nameObject);
         taskTypeListElements.getOkAddObject().click();
