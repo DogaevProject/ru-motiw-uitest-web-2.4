@@ -1,6 +1,7 @@
 package ru.motiw.mobile.steps.Document;
 
 import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.ex.ElementNotFound;
 import org.openqa.selenium.By;
 import ru.motiw.mobile.elements.Documents.DocumentElementsMobile;
 import ru.motiw.mobile.elements.Internal.FilesPreviewElementsMobile;
@@ -62,7 +63,7 @@ public class ResolutionStepsMobile extends DocumentStepsMobile {
                 // Переход в документ из грида
                 gridOfFoldersSteps.openItemInGrid(document.getDocumentType().getDocRegisterCardsName(), folder);
                 // Ожидание кнопок тулбара
-                formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);
+                waitToolbarOfMenu();
             }
         }
 
@@ -70,6 +71,7 @@ public class ResolutionStepsMobile extends DocumentStepsMobile {
         documentElementsMobile.getFormOfResolution().waitUntil(visible, 500);
 
         // Заполнение полей раб.группа
+        documentElementsMobile.getInputEmployeeFieldInFormOfCreateResolution("Ответственный руководитель").waitUntil(visible, 20000);
         choiceUserOnTheRole(
                 resolution.getExecutiveManagers(),
                 documentElementsMobile.getInputEmployeeFieldInFormOfCreateResolution("Ответственный руководитель"));

@@ -62,7 +62,7 @@ public class ExecutionDocumentStepsMobile extends DocumentStepsMobile {
      */
     private void executionInFormOfDocument(Document document, Folder folder, ExecutionOfDocument executionOfDocument, TypeOfLocation executionPlace) {
         // Ожидание и проверка кнопок тулбара
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);
+        resolutionStepsMobile.waitToolbarOfMenu();;
         // Выполнение операций
         executionOperations(document, folder, executionOfDocument, executionPlace); // также как visibleWithRightAccessToOperations - локаторы кнопкок операций зависят от того, где мы находимся
     }
@@ -132,7 +132,7 @@ public class ExecutionDocumentStepsMobile extends DocumentStepsMobile {
             executionOfDocument, TypeOfLocation executionPlace) {
         loginStepsMobile
                 .loginAs(employee) // Авторизация под участником рассмотрения документа
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(employee); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folder);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.validateThatInGrid().itemDisplayed(document.getDocumentType().getDocRegisterCardsName(), folder);
@@ -244,7 +244,7 @@ public class ExecutionDocumentStepsMobile extends DocumentStepsMobile {
             folder, ExecutionOfDocument executionOfDocument) {
         loginStepsMobile
                 .loginAs(employee) // Авторизация под участником рассмотрения документа
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(employee); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folder);
         //----------------------------------------------------------------ГРИД - Папка
 
@@ -362,7 +362,7 @@ public class ExecutionDocumentStepsMobile extends DocumentStepsMobile {
         gridOfFoldersSteps.openItemInGrid(document.getDocumentType().getDocRegisterCardsName(), folder);
         //----------------------------------------------------------------ФОРМА - Документ
         // Ожидание и проверка кнопок тулбара
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);
+        resolutionStepsMobile.waitToolbarOfMenu();;
         validateThatOperations().visibleWithRightAccessToOperations(document, currentUser);
 
     }

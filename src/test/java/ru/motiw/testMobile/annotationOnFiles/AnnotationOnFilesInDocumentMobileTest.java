@@ -159,7 +159,7 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
         //-------------------------------------------------------------------------------Создать резолюцию в АРМ
         loginStepsMobile
                 .loginAs(ADMIN)
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(ADMIN); // Ожидание открытия главной страницы
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openFolder(folders[0]);
         resolutionStepsMobile.createAllResolutionsInDocument(documentWithPdf, folders[0], GRID_FOLDER);
@@ -180,12 +180,12 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
     public void addAnnotationOnPdfFromFirstUser(Document documentWithPdf, Folder[] folders, AuthorOfAnnotation[] authorOfAnnotation) throws Exception {
         loginStepsMobile
                 .loginAs(authorOfAnnotation[0].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[0].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(documentWithPdf.getDocumentType().getDocRegisterCardsName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Документ
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         //Комментирование на файле
         annotationOnFilesSteps
                 .addCommentOfPenOnPdfFile(authorOfAnnotation[0])
@@ -193,7 +193,7 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
                 .validateThat().annotationPenAndMarkerOnPdfExist();
         // ------------------  Проверяем после перезагрузки страницы
         refresh();
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         annotationOnFilesSteps
                 .validateThat()
                 .annotationControlsToolbarForPdfAppears()
@@ -222,12 +222,12 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
         internalStepsMobile.goToAuthorizationPage();
         loginStepsMobile
                 .loginAs(authorOfAnnotation[0].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[0].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(documentWithImg.getDocumentType().getDocRegisterCardsName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Документ
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         //Комментирование на файле
         annotationOnFilesSteps
                 .addCommentOfPenOnFile(authorOfAnnotation[0])
@@ -235,7 +235,7 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
                 .validateThat().annotationPenAndMarkerExist();
         // ------------------  Проверяем после перезагрузки страницы
         refresh();
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         annotationOnFilesSteps
                 .validateThat()
                 .annotationControlsToolbarAppears()
@@ -264,12 +264,12 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
         internalStepsMobile.goToAuthorizationPage();
         loginStepsMobile
                 .loginAs(authorOfAnnotation[0].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[0].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(documentWithPdfAndPng.getDocumentType().getDocRegisterCardsName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Документ
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // ------------------  Комментирование на png-файле
         annotationOnFilesSteps
                 .addCommentOfPenOnFile(authorOfAnnotation[0])
@@ -296,7 +296,7 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
                 .annotationPenAndMarkerOnPdfExist();
         // ------------------  Проверяем после перезагрузки страницы
         refresh();
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // Проверяем png-файл
         annotationOnFilesSteps
                 .validateThat()
@@ -342,12 +342,12 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
         // ------------------ Проверка под Пользователем-Б
         loginStepsMobile
                 .loginAs(authorOfAnnotation[1].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[1].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(documentWithPdf.getDocumentType().getDocRegisterCardsName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Документ
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // ------------------ Проверяем отображение граф.комментария Пользователя-А
         annotationOnFilesSteps.validateThat()
                 .annotationTriggerForPdfAppears()
@@ -382,12 +382,12 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
         // ------------------ Проверка под Пользователем-Б
         loginStepsMobile
                 .loginAs(authorOfAnnotation[1].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[1].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(documentWithImg.getDocumentType().getDocRegisterCardsName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Документ
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // ------------------ Проверяем отображение граф.комментария Пользователя-А
         annotationOnFilesSteps.validateThat()
                 .annotationTriggerAppears()
@@ -422,12 +422,12 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
         // ------------------ Проверка под Пользователем-Б
         loginStepsMobile
                 .loginAs(authorOfAnnotation[1].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[1].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(documentWithPdfAndPng.getDocumentType().getDocRegisterCardsName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Документ
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // ------------------ Проверяем работу с граф.комментарием на png Пользователя-А
         annotationOnFilesSteps.validateThat()
                 .annotationTriggerAppears()
@@ -480,19 +480,19 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
         internalStepsMobile.goToAuthorizationPage();
         loginStepsMobile
                 .loginAs(authorOfAnnotation[1].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[1].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(documentWithPdf.getDocumentType().getDocRegisterCardsName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Документ
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // Добавляем комментарий под Пользователем-Б
         annotationOnFilesSteps.validateThat().annotationControlsToolbarForPdfAppears();
         annotationOnFilesSteps.addCommentOfPenOnPdfFile(authorOfAnnotation[1])
                 .validateThat().annotationsFirstAndSecondAuthorOnPdfExist();
         // ------------------  Проверяем после перезагрузки страницы
         refresh();
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         annotationOnFilesSteps.validateThat().annotationsFirstAndSecondAuthorOnPdfExist();
         // Выключение граф.комментария Пользователя-А, Б
         annotationOnFilesSteps.clickButtonOfListOfAuthorsAnnotationsOnPdf().disableViewAnnotationByAuthorOnPdf(authorOfAnnotation[1].getEmployee())
@@ -522,19 +522,19 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
         internalStepsMobile.goToAuthorizationPage();
         loginStepsMobile
                 .loginAs(authorOfAnnotation[1].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[1].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(documentWithImg.getDocumentType().getDocRegisterCardsName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Документ
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // Добавляем комментарий под Пользователем-Б
         annotationOnFilesSteps.validateThat().annotationControlsToolbarAppears();
         annotationOnFilesSteps.addCommentOfPenOnFile(authorOfAnnotation[1])
                 .validateThat().annotationsFirstAndSecondAuthorExist();
         // ------------------  Проверяем после перезагрузки страницы
         refresh();
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         annotationOnFilesSteps.validateThat().annotationsFirstAndSecondAuthorExist();
         // Выключение граф.комментария Пользователя-А, Б
         annotationOnFilesSteps.clickButtonOfListOfAuthorsAnnotations().disableViewAnnotationByAuthor(authorOfAnnotation[1].getEmployee())
@@ -563,12 +563,12 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
         internalStepsMobile.goToAuthorizationPage();
         loginStepsMobile
                 .loginAs(authorOfAnnotation[1].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[1].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(documentWithPdfAndPng.getDocumentType().getDocRegisterCardsName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Документ
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // Добавляем комментарий на png под Пользователем-Б
         annotationOnFilesSteps.validateThat().annotationControlsToolbarAppears();
         annotationOnFilesSteps.addCommentOfPenOnFile(authorOfAnnotation[1])
@@ -596,7 +596,7 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
 
         // ------------------  Проверяем после перезагрузки страницы
         refresh();
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // Проверяем png-файл
         annotationOnFilesSteps.validateThat().annotationsFirstAndSecondAuthorExist();
         // Выключение граф.комментария Пользователя-А, Б
@@ -612,7 +612,7 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
         annotationOnFilesSteps.clickButtonOfListOfAuthorsAnnotations();
         // Проверяем pdf-файл
         validateFilesStepsMobile.switchToNextFile(1, 2);
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         annotationOnFilesSteps.validateThat().annotationsFirstAndSecondAuthorOnPdfExist();
         // Выключение граф.комментария Пользователя-А, Б
         annotationOnFilesSteps.clickButtonOfListOfAuthorsAnnotationsOnPdf().disableViewAnnotationByAuthorOnPdf(authorOfAnnotation[1].getEmployee())
@@ -641,18 +641,18 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
         internalStepsMobile.goToAuthorizationPage();
         loginStepsMobile
                 .loginAs(authorOfAnnotation[1].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[1].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(documentWithPdf.getDocumentType().getDocRegisterCardsName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Документ
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // ------------------ Проверяем удаление граф.комментария Пользователя-Б и отображение граф.комментария Пользователя-А
         annotationOnFilesSteps.eraseAnnotationOnPdfFile(authorOfAnnotation[1])
                 .validateThat().annotationPenAndMarkerOnPdfExist();
         // ------------------  Проверяем после перезагрузки страницы
         refresh();
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         annotationOnFilesSteps.clickButtonOfListOfAuthorsAnnotationsOnPdf()
                 .validateThat()
                 .triggerOfViewAnnotationByAuthorOnPdfNotExist(authorOfAnnotation[1].getEmployee()) // отсутствие кнопки включения/выключения отображения комментария Пользователя-Б
@@ -675,18 +675,18 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
         internalStepsMobile.goToAuthorizationPage();
         loginStepsMobile
                 .loginAs(authorOfAnnotation[1].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[1].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(documentWithImg.getDocumentType().getDocRegisterCardsName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Документ
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // ------------------ Проверяем удаление граф.комментария Пользователя-Б и отображение граф.комментария Пользователя-А
         annotationOnFilesSteps.eraseAnnotationOnFile(authorOfAnnotation[1])
                 .validateThat().annotationPenAndMarkerExist();
         // ------------------  Проверяем после перезагрузки страницы
         refresh();
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         annotationOnFilesSteps.clickButtonOfListOfAuthorsAnnotations()
                 .validateThat()
                 .triggerOfViewAnnotationByAuthorNotExist(authorOfAnnotation[1].getEmployee()) // отсутствие кнопки включения/выключения отображения комментария Пользователя-Б
@@ -710,12 +710,12 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
         internalStepsMobile.goToAuthorizationPage();
         loginStepsMobile
                 .loginAs(authorOfAnnotation[1].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[1].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(documentWithPdfAndPng.getDocumentType().getDocRegisterCardsName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Документ
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // ------------------ Проверяем удаление граф.комментария на png Пользователя-Б и отображение граф.комментария Пользователя-А
         annotationOnFilesSteps.eraseAnnotationOnFile(authorOfAnnotation[1])
                 .validateThat().annotationPenAndMarkerExist();
@@ -735,7 +735,7 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
                 .validateThat().annotationPenAndMarkerOnPdfExist();
         // ------------------  Проверяем после перезагрузки страницы
         refresh();
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // Проверяем png-файл
         annotationOnFilesSteps.clickButtonOfListOfAuthorsAnnotations()
                 .validateThat()
@@ -768,12 +768,12 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
         internalStepsMobile.goToAuthorizationPage();
         loginStepsMobile
                 .loginAs(authorOfAnnotation[0].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[0].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(documentWithPdfAndPng.getDocumentType().getDocRegisterCardsName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Документ
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // ------------------ Проверяем удаление граф.комментария на png Пользователя-А
         annotationOnFilesSteps.eraseAnnotationOnFile(authorOfAnnotation[0])
                 .validateThat().annotationNotExist();
@@ -784,7 +784,7 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
                 .validateThat().annotationNotExist();
         // ------------------  Проверяем после перезагрузки страницы
         refresh();
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // Проверяем png-файл
         annotationOnFilesSteps.validateThat().annotationTriggerNotExit();
         // Проверяем pdf-файл
@@ -805,7 +805,7 @@ public class AnnotationOnFilesInDocumentMobileTest extends AnnotationOnFilesInDo
                 .validateThat().annotationOnPdfNotExist();
         // ------------------  Проверяем после перезагрузки страницы
         refresh();
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // Проверяем pdf-файл
         validateFilesStepsMobile.switchToNextFile(1, 2);
         annotationOnFilesSteps

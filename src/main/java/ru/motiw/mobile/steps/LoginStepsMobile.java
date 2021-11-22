@@ -1,6 +1,8 @@
 package ru.motiw.mobile.steps;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ex.ElementNotFound;
+import com.codeborne.selenide.ex.UIAssertionError;
 import org.openqa.selenium.TimeoutException;
 import ru.motiw.mobile.elements.Internal.InternalElementsMobile;
 import ru.motiw.mobile.elements.Login.LoginPageElementsMobile;
@@ -8,7 +10,8 @@ import ru.motiw.web.model.Administration.Users.Employee;
 import ru.motiw.web.steps.BaseSteps;
 
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.page;
+import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.WebDriverRunner.clearBrowserCache;
 
 /*
  * Страница авторизации - Mobile
@@ -20,6 +23,7 @@ public class LoginStepsMobile extends BaseSteps {
 
     /**
      * Вводим Login пользователя
+     *
      * @param login input text login
      */
     public LoginStepsMobile setLoginField(String login) {
@@ -29,6 +33,7 @@ public class LoginStepsMobile extends BaseSteps {
 
     /**
      * Вводим пароль пользователя
+     *
      * @param password input text password
      */
     public LoginStepsMobile setPasswordField(String password) {
@@ -53,15 +58,23 @@ public class LoginStepsMobile extends BaseSteps {
     }
 
     /**
-     *Ожидание открытия главной страницы после авторизации
+     * Ожидание открытия главной страницы после авторизации
      */
-    public void waitLoadMainPage() {
+    public void waitLoadMainPage(Employee employee) {
         // Ожидание появления маски загрузки
-       loginPageElementsMobile.getMaskOfLoading().waitUntil(Condition.appear, 5000);
-        // Ожидание скрытия маски загрузки
-       loginPageElementsMobile.getMaskOfLoading().waitUntil(Condition.disappear, 10000);
-        // Ожидание кнопки Главного Меню
-        internalElementsMobile.getButtonMainMenu().waitUntil(Condition.visible, 10000);
+        loginPageElementsMobile.getMaskOfLoading().waitUntil(Condition.appear, 5000);
+        try {
+            // Ожидание скрытия маски загрузки
+            loginPageElementsMobile.getMaskOfLoading().waitUntil(Condition.disappear, 10000);
+            // Ожидание кнопки Главного Меню
+            internalElementsMobile.getButtonMainMenu().waitUntil(Condition.visible, 10000);
+        } catch (UIAssertionError e) {
+            clearBrowserCache();
+            refresh();
+            loginAs(employee);
+            // Ожидание кнопки Главного Меню
+            internalElementsMobile.getButtonMainMenu().waitUntil(Condition.visible, 10000);
+        }
     }
 
 

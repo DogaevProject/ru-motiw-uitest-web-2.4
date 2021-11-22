@@ -3,10 +3,14 @@ package ru.motiw.mobile.steps;
 
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.ex.ElementNotFound;
+import com.codeborne.selenide.ex.UIAssertionError;
+import ru.motiw.mobile.steps.Document.ResolutionStepsMobile;
 import ru.motiw.web.model.Administration.Users.Employee;
 
 import static com.codeborne.selenide.Condition.not;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selenide.refresh;
 
 /**
  *  Шаги в карточке задачи/документа
@@ -49,6 +53,19 @@ public class CardStepsMobile extends BaseStepsMobile {
             formElementsMobile.getButtonAppointUsers().click(); //кнопка "Назначить"
             formElementsMobile.getInputForSearchUsers().waitUntil(not(visible), 2000); // Ожидание закрытия формы
         }
+    }
+
+    /**
+     * Ожидание Тулбара меню Формы задачи/документа
+     */
+    public CardStepsMobile waitToolbarOfMenu() {
+        try {
+            formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);
+        } catch (UIAssertionError elementNotFound) {
+            refresh();
+            formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);
+        }
+        return this;
     }
 
 }

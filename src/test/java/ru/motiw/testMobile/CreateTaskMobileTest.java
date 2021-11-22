@@ -170,7 +170,7 @@ public class CreateTaskMobileTest extends TasksMobile {
     public void verifyCreateAndEditingTask(Task task, Task editTask, Folder[] folder) throws Exception {
         loginStepsMobile
                 .loginAs(ADMIN) // Авторизация
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(ADMIN); // Ожидание открытия главной страницы
         internalPageStepsMobile.goToInternalMenu(); // Открываем главное меню
         assertThat("Check that the displayed menu item 9 (User Info; Tasks And Documents; Create Tasks; Today; Search; Settings; Help; Exit; Go To Full Version)",
                 internalPageStepsMobile.hasMenuUserComplete());
@@ -224,7 +224,7 @@ public class CreateTaskMobileTest extends TasksMobile {
     public void verifyCreateAndEditingTaskWithCustomFieldsMobile(Task task, Task editTask, Folder[] folder) throws Exception {
         loginStepsMobile
                 .loginAs(ADMIN) // Авторизация
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(ADMIN); // Ожидание открытия главной страницы
         internalPageStepsMobile.goToInternalMenu(); // Открываем главное меню
         assertThat("Check that the displayed menu item 9 (User Info; Tasks And Documents; Create Tasks; Today; Search; Settings; Help; Exit; Go To Full Version)",
                 internalPageStepsMobile.hasMenuUserComplete());

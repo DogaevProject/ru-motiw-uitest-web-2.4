@@ -148,7 +148,7 @@ public class ApproveResolutionMobileTest extends TestsOfResolutionsMobile {
     public void verifyingApproveProjectResolutionFirstUser(Employee employee, Document document, Folder folder) {
         loginStepsMobile
                 .loginAs(employee)
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(employee); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folder);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.validateThatInGrid().itemDisplayed(document.getDocumentType().getDocRegisterCardsName(), folder);
@@ -159,18 +159,18 @@ public class ApproveResolutionMobileTest extends TestsOfResolutionsMobile {
         //Сохранить url для перехода по прямой ссылке
         urlDocInArm = getWebDriver().getCurrentUrl();
         // Ожидание и проверка кнопок тулбара
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);
+        resolutionStepsMobile.waitToolbarOfMenu();
         // Выполнение операций
         resolutionStepsMobile.approveProjectOfResolution();
         // Проверяем что проект утвержден
         internalStepsMobile.logout();
         loginStepsMobile
                 .loginAs(employee)
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(employee); // Ожидание открытия главной страницы
         open(urlDocInArm);
         // Ожидание и проверка кнопок тулбара
         refresh();
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);
+        resolutionStepsMobile.waitToolbarOfMenu();
         resolutionStepsMobile.verifyThatNotHavePanelProjectOfResolution();
         // Выход из системы
         internalStepsMobile.logout();
@@ -199,7 +199,7 @@ public class ApproveResolutionMobileTest extends TestsOfResolutionsMobile {
     public void verifyingApproveProjectResolutionSecondUser(Employee employee, Document document, Folder folder) {
         loginStepsMobile
                 .loginAs(employee)
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(employee); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folder);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.validateThatInGrid().itemDisplayed(document.getDocumentType().getDocRegisterCardsName(), folder);
@@ -208,18 +208,18 @@ public class ApproveResolutionMobileTest extends TestsOfResolutionsMobile {
 
         //----------------------------------------------------------------ФОРМА - Документ
         // Ожидание и проверка кнопок тулбара
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);
+        resolutionStepsMobile.waitToolbarOfMenu();
         // Выполнение операций
         resolutionStepsMobile.approveProjectOfResolution();
         // Проверяем что проект утвержден
         internalStepsMobile.logout();
         loginStepsMobile
                 .loginAs(employee)
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(employee); // Ожидание открытия главной страницы
         open(urlDocInArm);
         // Ожидание и проверка кнопок тулбара
         refresh();
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);
+        resolutionStepsMobile.waitToolbarOfMenu();
         resolutionStepsMobile.verifyThatNotHavePanelProjectOfResolution();
         // Выход из системы
         internalStepsMobile.logout();

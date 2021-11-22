@@ -26,6 +26,7 @@ public class VerifyDocumentStepsMobile extends DocumentStepsMobile {
     private GridOfFoldersSteps gridOfFoldersSteps = page(GridOfFoldersSteps.class);
     private InternalElementsMobile internalElementsMobile = page(InternalElementsMobile.class);
     private TaskElementsMobile taskElementsMobile = page(TaskElementsMobile.class);
+    private ResolutionStepsMobile resolutionStepsMobile = page(ResolutionStepsMobile.class);
 
 
     /**
@@ -43,7 +44,7 @@ public class VerifyDocumentStepsMobile extends DocumentStepsMobile {
         /**
          * Ожидание и проверка кнопок тулбара
          */
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 20000);
+        resolutionStepsMobile.waitToolbarOfMenu();
         validateThatOperations().visibleWithRightAccessToOperations(document, currentUser);
 
         /*
@@ -65,7 +66,7 @@ public class VerifyDocumentStepsMobile extends DocumentStepsMobile {
     private void stepsOfVerifyDocument(Document document, Employee currentUser, Folder[] folders) throws Exception {
         loginStepsMobile
                 .loginAs(currentUser) // Авторизация под участником рассмотрения документа
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(currentUser); // Ожидание открытия главной страницы
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openFolder(folders[0]);  // входим в папку
         sleep(500); //ожидание папок;

@@ -203,7 +203,17 @@ public class UnionTasksSteps extends BaseSteps {
             waitMaskForGridTask();
             unionTasksElements.getFolderInTheGroup().first().contextClick();
         }
-        unionTasksElements.getAddFolder().click(); // Добавить папку
+        try {
+            unionTasksElements.getAddFolder().click(); // Добавить папку
+        } catch (ElementNotFound e) {
+            if (folder.getParentFolder() != null) {
+                selectTheParentFolder(folder.getParentFolder()); // Выбираем родительскую папку папку и выводим КМ для взаимодействия с папкой
+            } else {
+                waitMaskForGridTask();
+                unionTasksElements.getFolderInTheGroup().first().contextClick();
+            }
+            unionTasksElements.getAddFolder().click(); // Добавить папку
+        }
         getFrameObject($(By.xpath("//iframe[contains(@src,'/user/smart_folder')]"))); // уходим во фрейм окна - Редактирование папки
     }
 

@@ -10,6 +10,7 @@ import ru.motiw.data.dataproviders.AnnotationOnFilesInDocumentAndTaskMobile;
 import ru.motiw.mobile.elements.FormElementsMobile;
 import ru.motiw.mobile.model.AuthorOfAnnotation;
 import ru.motiw.mobile.steps.AnnotationOnFilesSteps;
+import ru.motiw.mobile.steps.Document.ResolutionStepsMobile;
 import ru.motiw.mobile.steps.Folders.GridOfFoldersSteps;
 import ru.motiw.mobile.steps.InternalStepsMobile;
 import ru.motiw.mobile.steps.LoginStepsMobile;
@@ -49,6 +50,7 @@ public class AnnotationOnFilesInTaskMobileTest extends AnnotationOnFilesInDocume
     private FormElementsMobile formElementsMobile;
     private CardTaskStepsMobile cardTaskStepsMobile;
     private NewTaskStepsMobile newTaskStepsMobile;
+    private ResolutionStepsMobile resolutionStepsMobile;
 
     @BeforeClass
     public void beforeTest() {
@@ -63,6 +65,7 @@ public class AnnotationOnFilesInTaskMobileTest extends AnnotationOnFilesInDocume
         formElementsMobile = page(FormElementsMobile.class);
         cardTaskStepsMobile = page(CardTaskStepsMobile.class);
         newTaskStepsMobile = page(NewTaskStepsMobile.class);
+        resolutionStepsMobile = page(ResolutionStepsMobile.class);
     }
 
     /**
@@ -103,7 +106,7 @@ public class AnnotationOnFilesInTaskMobileTest extends AnnotationOnFilesInDocume
         //-------------------------------------------------------------------------------Создать задачу в АРМ
         loginStepsMobile
                 .loginAs(ADMIN)
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(ADMIN); // Ожидание открытия главной страницы
         //----------------------------------------------------------------ФОРМА - создания Задачи
         newTaskStepsMobile.goToCreateNewTask().creatingTask(task);
         newTaskStepsMobile.saveTask().verifyThatToastOfNewTaskAppear(); //Сохраняем задачу
@@ -123,12 +126,12 @@ public class AnnotationOnFilesInTaskMobileTest extends AnnotationOnFilesInDocume
     public void addAnnotationOnFirstUser(Task task, Folder[] folders, AuthorOfAnnotation[] authorOfAnnotation) throws Exception {
         loginStepsMobile
                 .loginAs(authorOfAnnotation[0].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[0].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(task.getTaskName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Задача
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        cardTaskStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // Переходим на кладку "Файлы"
         cardTaskStepsMobile.openTab(FILES_TAB);
         //Комментирование на файле
@@ -139,7 +142,7 @@ public class AnnotationOnFilesInTaskMobileTest extends AnnotationOnFilesInDocume
         // ------------------  Проверяем после перезагрузки страницы
         refresh();
         // Переходим на вкладку "Файлы"
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        cardTaskStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         cardTaskStepsMobile.openTab(FILES_TAB);
         annotationOnFilesSteps
                 .validateThat()
@@ -170,12 +173,12 @@ public class AnnotationOnFilesInTaskMobileTest extends AnnotationOnFilesInDocume
         // ------------------ Проверка под Пользователем-Б
         loginStepsMobile
                 .loginAs(authorOfAnnotation[1].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[1].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(task.getTaskName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Задача
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        cardTaskStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // Переходим на вкладку "Файлы"
         cardTaskStepsMobile.openTab(FILES_TAB);
         // ------------------ Проверяем отображение граф.комментария Пользователя-А
@@ -213,12 +216,12 @@ public class AnnotationOnFilesInTaskMobileTest extends AnnotationOnFilesInDocume
     public void addAnnotationOnSecondUser(Task task, Folder[] folders, AuthorOfAnnotation[] authorOfAnnotation) throws Exception {
         loginStepsMobile
                 .loginAs(authorOfAnnotation[1].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[1].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(task.getTaskName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Задача
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        cardTaskStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // Переходим на вкладку "Файлы"
         cardTaskStepsMobile.openTab(FILES_TAB);
         // Добавляем комментарий под Пользователем-Б
@@ -229,7 +232,7 @@ public class AnnotationOnFilesInTaskMobileTest extends AnnotationOnFilesInDocume
         refresh();
         // Переходим на вкладку "Файлы"
         cardTaskStepsMobile.openTab(FILES_TAB);
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        cardTaskStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         annotationOnFilesSteps.validateThat().annotationsFirstAndSecondAuthorOnPdfExist();
         // Выключение граф.комментария Пользователя-А, Б
         annotationOnFilesSteps.clickButtonOfListOfAuthorsAnnotationsOnPdf().disableViewAnnotationByAuthorOnPdf(authorOfAnnotation[1].getEmployee())
@@ -258,12 +261,12 @@ public class AnnotationOnFilesInTaskMobileTest extends AnnotationOnFilesInDocume
     public void eraseOwnAnnotation(Task task, Folder[] folders, AuthorOfAnnotation[] authorOfAnnotation) throws Exception {
         loginStepsMobile
                 .loginAs(authorOfAnnotation[1].getEmployee())
-                .waitLoadMainPage(); // Ожидание открытия главной страницы
+                .waitLoadMainPage(authorOfAnnotation[1].getEmployee()); // Ожидание открытия главной страницы
         gridOfFoldersSteps.openFolder(folders[0]);
         //----------------------------------------------------------------ГРИД - Папка
         gridOfFoldersSteps.openItemInGrid(task.getTaskName(), folders[0]);
         //----------------------------------------------------------------ФОРМА - Задача
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        cardTaskStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         // Переходим на вкладку "Файлы"
         cardTaskStepsMobile.openTab(FILES_TAB);
         // ------------------ Проверяем удаление граф.комментария Пользователя-Б и отображение граф.комментария Пользователя-А
@@ -273,7 +276,7 @@ public class AnnotationOnFilesInTaskMobileTest extends AnnotationOnFilesInDocume
         refresh();
         // Переходим на вкладку "Файлы"
         cardTaskStepsMobile.openTab(FILES_TAB);
-        formElementsMobile.getToolbarOfMenu().waitUntil(visible, 15000);  // Ожидание тулбара
+        cardTaskStepsMobile.waitToolbarOfMenu();  // Ожидание тулбара
         annotationOnFilesSteps.clickButtonOfListOfAuthorsAnnotationsOnPdf()
                 .validateThat()
                 .triggerOfViewAnnotationByAuthorOnPdfNotExist(authorOfAnnotation[1].getEmployee()) // отсутствие кнопки включения/выключения отображения комментария Пользователя-Б
