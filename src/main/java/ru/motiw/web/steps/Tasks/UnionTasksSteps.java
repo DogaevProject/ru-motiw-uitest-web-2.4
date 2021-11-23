@@ -3,6 +3,7 @@ package ru.motiw.web.steps.Tasks;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.ex.ElementNotFound;
+import com.codeborne.selenide.ex.ElementShould;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -204,8 +205,9 @@ public class UnionTasksSteps extends BaseSteps {
             unionTasksElements.getFolderInTheGroup().first().contextClick();
         }
         try {
-            unionTasksElements.getAddFolder().click(); // Добавить папку
-        } catch (ElementNotFound e) {
+            unionTasksElements.getAddFolder().waitUntil(visible, 2000).click(); // Добавить папку
+        } catch (ElementShould e) {
+            // Обработка случая когда меню папки с первого клика не открывается
             if (folder.getParentFolder() != null) {
                 selectTheParentFolder(folder.getParentFolder()); // Выбираем родительскую папку папку и выводим КМ для взаимодействия с папкой
             } else {
