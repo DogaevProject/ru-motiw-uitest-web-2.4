@@ -34,4 +34,12 @@ public class EditDocumentResolutionsTabElements {
         return $(By.xpath("//div[@id=\"documentResolutionTab\"]//button[text()='Создать']"));
     }
 
+    /**
+     * Значение в Колонке конкретной резолюции в гриде
+     * @param textOfResolution - уникальный текст резолции по которому находим нужную запись в гриде
+     */
+    public SelenideElement getValueInColumnItemOfResolution(String textOfResolution, String expectedText) {
+        return $(By.xpath("//div[contains(text(), '" + textOfResolution  + "')]/ancestor::div[contains(@class,\"x-grid3-row ux-maximgb-tg-level-1\")]//div[text()='" + expectedText + "']"));
+    }
+
 }

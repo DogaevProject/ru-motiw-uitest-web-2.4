@@ -63,6 +63,20 @@ public class CreateResolutionFormElements {
 
 
     /**
+     * поле "Текст резолюций" - для активации поля
+     */
+    public SelenideElement fieldToActivateTextOfResolution() {
+        return $(By.xpath("(//div[@id=\"resolution-form-body\"]//div[text()=\"Текст резолюции\"]/ancestor::table//div[@class=\"x-grid-cell-inner \"])[2]"));
+    }
+
+    /**
+     * поле "Текст резолюций" - для ввода значения
+     */
+    public SelenideElement fieldToAddTextOfResolution() {
+        return $(By.xpath("//div[@id=\"resolution-form-body\"]//textarea"));
+    }
+
+    /**
      * Сохранить
      */
     public SelenideElement getButtonSaveResolution() {

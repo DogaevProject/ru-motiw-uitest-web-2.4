@@ -7,6 +7,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ru.motiw.web.elements.elementsweb.Documents.Resolution.CreateResolution.CreateResolutionFormElements;
 import ru.motiw.web.elements.elementsweb.Tasks.TaskForm.UsersSelectTheFormElements;
 import ru.motiw.web.model.Administration.Users.Employee;
+import ru.motiw.web.model.Document.Resolution;
+import ru.motiw.web.steps.BaseSteps;
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
@@ -17,7 +19,7 @@ import static ru.motiw.utils.WindowsUtil.newWindowForm;
 /**
  * Работа с резолюциями
  */
-public class ResolutionSteps {
+public class ResolutionSteps extends BaseSteps {
 
     private UsersSelectTheFormElements usersSelectTheFormElements = page(UsersSelectTheFormElements.class);
     private CreateResolutionFormElements createResolutionFormElements = page(CreateResolutionFormElements.class);
@@ -43,6 +45,15 @@ public class ResolutionSteps {
      */
     public ResolutionSteps addExecutiveManager(Employee[] users) {
         choiceUsersThroughTheSearchLiveSurname(users, createResolutionFormElements.fieldToAddExecutiveManagerField());
+        return this;
+    }
+
+    /**
+     * Добавление в поле "Текст резолюций"
+     */
+    public ResolutionSteps addTextOfResolution(String text) {
+        createResolutionFormElements.fieldToActivateTextOfResolution().click();
+        createResolutionFormElements.fieldToAddTextOfResolution().setValue(text);
         return this;
     }
 

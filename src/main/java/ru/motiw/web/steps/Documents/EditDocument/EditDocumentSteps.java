@@ -1,31 +1,16 @@
 package ru.motiw.web.steps.Documents.EditDocument;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.ex.ElementNotFound;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import ru.motiw.web.elements.elementsweb.Documents.CreateDocument.NewDocumentCartTabElements;
 import ru.motiw.web.elements.elementsweb.Documents.EditDocument.EditDocumentResolutionsTabElements;
 import ru.motiw.web.elements.elementsweb.Documents.Resolution.CreateResolution.CreateResolutionFormElements;
-import ru.motiw.web.elements.elementsweb.Tasks.TaskForm.UsersSelectTheFormElements;
-import ru.motiw.web.model.Administration.Users.Department;
-import ru.motiw.web.model.Administration.Users.Employee;
-import ru.motiw.web.model.DocflowAdministration.DictionaryEditor.DictionaryEditorField;
-import ru.motiw.web.model.DocflowAdministration.DocumentRegistrationCards.*;
-import ru.motiw.web.model.Document.Document;
 import ru.motiw.web.model.Document.Resolution;
 import ru.motiw.web.steps.BaseSteps;
 import ru.motiw.web.steps.Documents.Resolution.ResolutionSteps;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.io.File;
-
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static org.testng.AssertJUnit.fail;
-import static ru.motiw.utils.WindowsUtil.newWindowForm;
 
 /**
  * Редактирование документа
@@ -40,10 +25,10 @@ public class EditDocumentSteps extends BaseSteps {
     /**
      * Выбираем вкладку - Резолюции
      */
-    private EditDocumentSteps resolutionsTab() {
+    public EditDocumentSteps resolutionsTab() {
         editDocumentResolutionsTabElements.getResolutionsTab().click();
         waitForMask();
-        editDocumentResolutionsTabElements.getResolutionsTab().waitUntil(visible, 5000);
+        editDocumentResolutionsTabElements.getResolutionsTab().waitUntil(visible, 20000);
         return this;
     }
 
@@ -52,7 +37,21 @@ public class EditDocumentSteps extends BaseSteps {
      * Ожидание невидимости маски
      */
     private void waitForMask() {
-        $(By.xpath("//*[contains (@class, 'x-mask')]")).waitUntil(Condition.disappear, 10000);
+        $(By.xpath("//*[contains (@class, 'x-mask')]")).waitUntil(Condition.disappear, 30000);
+    }
+
+    /**
+     * Проверка статуса резолюции - статус "На исполнении"
+     */
+    public void statusOfResolutionIsOnExecution(Resolution resolution) {
+        editDocumentResolutionsTabElements.getValueInColumnItemOfResolution(resolution.getTextOfResolution(), "На исполнении").shouldBe(visible);
+    }
+
+    /**
+     * Проверка статуса резолюции - статус "Утверждено"
+     */
+    public void statusOfResolutionIsApproved(Resolution resolution) {
+        editDocumentResolutionsTabElements.getValueInColumnItemOfResolution(resolution.getTextOfResolution(), "Утверждено").shouldBe(visible);
     }
 
 
@@ -68,6 +67,7 @@ public class EditDocumentSteps extends BaseSteps {
         switchTo().frame($(By.cssSelector("#resolution_window")));
         createResolutionFormElements.getElementResolutionFormBody().waitUntil(visible, 10000);
         // Редактирование резолюции
+        resolutionSteps.addTextOfResolution(resolution.getTextOfResolution());
         resolutionSteps.deleteAuthor(resolution.getAuthorDefault()); // удаляем админа по умолчанию под которым создаем
         resolutionSteps.addAuthor(resolution.getAuthors());
         resolutionSteps.addExecutiveManager(resolution.getExecutiveManagers());

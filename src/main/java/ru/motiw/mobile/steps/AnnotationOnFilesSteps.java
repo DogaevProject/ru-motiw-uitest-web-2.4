@@ -4,12 +4,14 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
+import ru.motiw.mobile.elements.Documents.DocumentElementsMobile;
 import ru.motiw.mobile.elements.Internal.FilesPreviewElementsMobile;
 import ru.motiw.mobile.model.AuthorOfAnnotation;
 import ru.motiw.mobile.model.ControlsForAnnotationOnFile;
 import ru.motiw.mobile.steps.ValidationStepsMobile.ValidationAnnotationOnFilesStepsMobile;
 import ru.motiw.web.model.Administration.Users.Employee;
 
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static ru.motiw.mobile.model.AuthorOfAnnotation.NumbersOfAnnotation.FirstAnnotation;
@@ -23,6 +25,7 @@ import static ru.motiw.mobile.steps.ValidationStepsMobile.ValidationAnnotationOn
 public class AnnotationOnFilesSteps {
 
     private FilesPreviewElementsMobile filesPreviewElementsMobile = page(FilesPreviewElementsMobile.class);
+    private DocumentElementsMobile documentElementsMobile = page(DocumentElementsMobile.class);
 
     /**
      * Выбор контрола для комментирования pdf-файла на панели инструментов
@@ -158,6 +161,15 @@ public class AnnotationOnFilesSteps {
      */
     public AnnotationOnFilesSteps addCommentOfPenOnPdfFile(AuthorOfAnnotation authorOfAnnotation) {
         addCommentOnPdfFile(authorOfAnnotation, PEN);
+        return this;
+    }
+
+    /**
+     * Добавления граф.коментария на pdf-файле (ручка) в документе с проектом резолюции
+     */
+    public AnnotationOnFilesSteps addCommentOfPenOnPdfFileWithProjectOfResolution(AuthorOfAnnotation authorOfAnnotation) {
+        documentElementsMobile.getPanelProjectOfResolution().waitUntil(visible, 10000); // нужно ждать панель проекта перед проверкой появления панели инструментов
+        addCommentOfPenOnPdfFile(authorOfAnnotation);
         return this;
     }
 

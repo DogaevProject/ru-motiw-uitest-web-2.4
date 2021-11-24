@@ -9,6 +9,8 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import ru.motiw.data.dataproviders.TestsOfResolutionsMobile;
 import ru.motiw.mobile.elements.FormElementsMobile;
+import ru.motiw.mobile.model.AuthorOfAnnotation;
+import ru.motiw.mobile.steps.AnnotationOnFilesSteps;
 import ru.motiw.mobile.steps.Document.ExecutionDocumentStepsMobile;
 import ru.motiw.mobile.steps.Document.ResolutionStepsMobile;
 import ru.motiw.mobile.steps.Document.VerifyDocumentStepsMobile;
@@ -55,8 +57,8 @@ public class ApproveResolutionMobileTest extends TestsOfResolutionsMobile {
     private FormDocRegisterCardsEditConnectedRoutesSteps formDocRegisterCardsEditConnectedRoutesSteps;
     private FormDocRegisterCardsEditGeneralSteps formDocRegisterCardsEditGeneralSteps;
     private EditDocumentSteps editDocumentSteps;
-    private FormElementsMobile formElementsMobile;
     private ResolutionStepsMobile resolutionStepsMobile;
+    private AnnotationOnFilesSteps annotationOnFilesSteps;
 
     @BeforeClass
     public void beforeTest() {
@@ -70,9 +72,8 @@ public class ApproveResolutionMobileTest extends TestsOfResolutionsMobile {
         formDocRegisterCardsEditConnectedRoutesSteps = page(FormDocRegisterCardsEditConnectedRoutesSteps.class);
         formDocRegisterCardsEditGeneralSteps = page(FormDocRegisterCardsEditGeneralSteps.class);
         editDocumentSteps = page(EditDocumentSteps.class);
-        formElementsMobile = page(FormElementsMobile.class);
         resolutionStepsMobile = page(ResolutionStepsMobile.class);
-
+        annotationOnFilesSteps = page(AnnotationOnFilesSteps.class);
     }
 
     private String urlDocInWeb;
@@ -93,6 +94,7 @@ public class ApproveResolutionMobileTest extends TestsOfResolutionsMobile {
         userPageSteps.createUser(employee[0].setDepartment(departments[0]));
         userPageSteps.createUser(employee[1].setDepartment(departments[0]));
         userPageSteps.createUser(employee[2].setDepartment(departments[0]));
+        userPageSteps.createUser(employee[3].setDepartment(departments[0]));
 
         //---------------------------------------------------------------- Задачи/Задачи
         goToUnionTasks();
@@ -141,7 +143,6 @@ public class ApproveResolutionMobileTest extends TestsOfResolutionsMobile {
         internalPageSteps.logout();
         // Проверка - пользователь разлогинен
         assertTrue(loginPageSteps.isNotLoggedIn());
-        clearBrowserCache(); //чистим кеш, т.к после логаута в вебе пользователь все равно остается залогинен (баг после работы в user/tab/user/uniontasks/)
     }
 
     @Test(dataProvider = "objectDataForVerifyingApproveFirstProjectResolution", dataProviderClass = TestsOfResolutionsMobile.class, dependsOnMethods = "createFirstProjectInWeb")
@@ -187,11 +188,12 @@ public class ApproveResolutionMobileTest extends TestsOfResolutionsMobile {
         open(urlDocInWeb);
         // Создание проекта
         editDocumentSteps.createProjectOfResolution(document.getResolutionOfDocument()[1]);
+        refresh();
+        editDocumentSteps.createProjectOfResolution(document.getResolutionOfDocument()[2]);
         // Выход
         internalPageSteps.logout();
         // Проверка - пользователь разлогинен
         assertTrue(loginPageSteps.isNotLoggedIn());
-        clearBrowserCache(); //чистим кеш, т.к после логаута в вебе пользователь все равно остается залогинен (баг после работы в user/tab/user/uniontasks/)
     }
 
 
@@ -223,6 +225,55 @@ public class ApproveResolutionMobileTest extends TestsOfResolutionsMobile {
         resolutionStepsMobile.verifyThatNotHavePanelProjectOfResolution();
         // Выход из системы
         internalStepsMobile.logout();
+    }
+
+    @Test(dataProvider = "objectDataForVerifyingApproveThirdProjectResolution", dataProviderClass = TestsOfResolutionsMobile.class, dependsOnMethods = "verifyingApproveProjectResolutionSecondUser")
+    public void verifyingApproveProjectResolutionWithAnnotationOnFiles(Employee employee, Document document, Folder folder, AuthorOfAnnotation[] authorOfAnnotation) {
+        loginStepsMobile
+                .loginAs(employee)
+                .waitLoadMainPage(employee); // Ожидание открытия главной страницы
+        gridOfFoldersSteps.openFolder(folder);
+        //----------------------------------------------------------------ГРИД - Папка
+        gridOfFoldersSteps.validateThatInGrid().itemDisplayed(document.getDocumentType().getDocRegisterCardsName(), folder);
+        // Переход в документ из грида
+        gridOfFoldersSteps.openItemInGrid(document.getDocumentType().getDocRegisterCardsName(), folder);
+
+        //----------------------------------------------------------------ФОРМА - Документ
+        // Ожидание и проверка кнопок тулбара
+        resolutionStepsMobile.waitToolbarOfMenu();
+        //Комментирование на файле
+        annotationOnFilesSteps
+                .addCommentOfPenOnPdfFileWithProjectOfResolution(authorOfAnnotation[0]);
+        // Выполнение операций
+        resolutionStepsMobile.approveProjectOfResolution();
+        // Проверяем что проект утвержден
+        internalStepsMobile.logout();
+        loginStepsMobile
+                .loginAs(employee)
+                .waitLoadMainPage(employee); // Ожидание открытия главной страницы
+        open(urlDocInArm);
+        // Ожидание и проверка кнопок тулбара
+        refresh();
+        resolutionStepsMobile.waitToolbarOfMenu();
+        resolutionStepsMobile.verifyThatNotHavePanelProjectOfResolution();
+        // Выход из системы
+        internalStepsMobile.logout();
+    }
+
+    @Test(dataProvider = "objectDataForVerifyingApproveFirstProjectResolution", dataProviderClass = TestsOfResolutionsMobile.class, dependsOnMethods = "verifyingApproveProjectResolutionWithAnnotationOnFiles")
+    public void verifyingStatusApprovedProjects(Employee employee, Document document, Folder folder) {
+        // Проверка в веб статусов утвержденных резолюции
+        open(Configuration.baseUrl);
+        loginPageSteps.loginAs(ADMIN);
+        assertThat("Check that the displayed menu item 8 (Logo; Tasks; Documents; Messages; Calendar; Library; Tools; Details)",
+                internalPageSteps.hasMenuUserComplete()); // Проверяем отображение п.м. на внутренней странице
+        open(urlDocInWeb);
+        editDocumentSteps.resolutionsTab();
+        editDocumentSteps.statusOfResolutionIsOnExecution(document.getResolutionOfDocument()[0]);
+        editDocumentSteps.statusOfResolutionIsOnExecution(document.getResolutionOfDocument()[1]);
+        editDocumentSteps.statusOfResolutionIsApproved(document.getResolutionOfDocument()[2]);
+        // Выход
+        internalPageSteps.logout();
     }
 
 }

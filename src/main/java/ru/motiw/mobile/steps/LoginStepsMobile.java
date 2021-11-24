@@ -1,6 +1,7 @@
 package ru.motiw.mobile.steps;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ex.ElementNotFound;
 import com.codeborne.selenide.ex.UIAssertionError;
 import org.openqa.selenium.TimeoutException;
@@ -70,7 +71,7 @@ public class LoginStepsMobile extends BaseSteps {
             internalElementsMobile.getButtonMainMenu().waitUntil(Condition.visible, 10000);
         } catch (UIAssertionError e) {
             clearBrowserCache();
-            refresh();
+            open(Configuration.baseUrl);
             loginAs(employee);
             // Ожидание кнопки Главного Меню
             internalElementsMobile.getButtonMainMenu().waitUntil(Condition.visible, 10000);

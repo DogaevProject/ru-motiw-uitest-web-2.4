@@ -31,6 +31,15 @@ public class ResolutionStepsMobile extends DocumentStepsMobile {
     private FilesPreviewElementsMobile filesPreviewElementsMobile = page(FilesPreviewElementsMobile.class);
 
     /**
+     * Ожидание панели проекта резолюции расположенной внизу
+     */
+    public ResolutionStepsMobile waitPanelProjectOfResolution() {
+        documentElementsMobile.getPanelProjectOfResolution().waitUntil(visible, 10000);
+        return this;
+    }
+
+
+    /**
      * Массовое создание всех резолюций, которые содержаться в объекте Document
      */
     public ResolutionStepsMobile createAllResolutionsInDocument(Document document, Folder folder, TypeOfLocation executionPlace) {
