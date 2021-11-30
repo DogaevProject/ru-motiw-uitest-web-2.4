@@ -62,7 +62,7 @@ public class ExecutionDocumentStepsMobile extends DocumentStepsMobile {
      */
     private void executionInFormOfDocument(Document document, Folder folder, ExecutionOfDocument executionOfDocument, TypeOfLocation executionPlace) {
         // Ожидание и проверка кнопок тулбара
-        resolutionStepsMobile.waitToolbarOfMenu();;
+        resolutionStepsMobile.waitToolbarOfMenu();
         // Выполнение операций
         executionOperations(document, folder, executionOfDocument, executionPlace); // также как visibleWithRightAccessToOperations - локаторы кнопкок операций зависят от того, где мы находимся
     }

@@ -36,7 +36,7 @@ public class InternalStepsMobile extends BaseSteps {
      * Домой (возврат на основную стр-цу)
      */
     public BaseSteps goToHome() {
-        internalElementsMobile.getButtonGoHome().click();
+        internalElementsMobile.getButtonGoHome().waitUntil(Condition.visible, 10000).click();
         return this;
     }
 

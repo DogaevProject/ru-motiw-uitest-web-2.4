@@ -2,7 +2,9 @@ package ru.motiw.web.steps.Documents.EditDocument;
 
 import com.codeborne.selenide.Condition;
 import org.openqa.selenium.By;
+import ru.motiw.web.elements.elementsweb.Documents.CreateDocument.NewDocumentRouteTabElements;
 import ru.motiw.web.elements.elementsweb.Documents.EditDocument.EditDocumentResolutionsTabElements;
+import ru.motiw.web.elements.elementsweb.Documents.EditDocument.EditDocumentRouteTabElements;
 import ru.motiw.web.elements.elementsweb.Documents.Resolution.CreateResolution.CreateResolutionFormElements;
 import ru.motiw.web.model.Document.Resolution;
 import ru.motiw.web.steps.BaseSteps;
@@ -18,9 +20,22 @@ import static org.testng.AssertJUnit.fail;
 public class EditDocumentSteps extends BaseSteps {
 
     private EditDocumentResolutionsTabElements editDocumentResolutionsTabElements = page(EditDocumentResolutionsTabElements.class);
+    private EditDocumentRouteTabElements editDocumentRouteTabElements = page(EditDocumentRouteTabElements.class);
     private CreateResolutionFormElements createResolutionFormElements = page(CreateResolutionFormElements.class);
     private ResolutionSteps resolutionSteps = page(ResolutionSteps.class);
+    private NewDocumentRouteTabElements routeTableGridElements = page(NewDocumentRouteTabElements.class);
 
+
+    /**
+     * Выбираем вкладку - Маршрут
+     */
+    public EditDocumentSteps routesTab() {
+        editDocumentRouteTabElements.getRoutesTab().click();
+        waitForMask();
+        editDocumentRouteTabElements.getRoutesTab().waitUntil(visible, 20000);
+        getFrameObject($(routeTableGridElements.getFrameRoute())); // уходим во фрейм Маршруты
+        return this;
+    }
 
     /**
      * Выбираем вкладку - Резолюции

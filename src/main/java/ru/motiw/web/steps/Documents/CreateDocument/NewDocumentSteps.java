@@ -12,6 +12,7 @@ import ru.motiw.web.model.Administration.Users.Department;
 import ru.motiw.web.model.Administration.Users.Employee;
 import ru.motiw.web.model.DocflowAdministration.DictionaryEditor.DictionaryEditorField;
 import ru.motiw.web.model.DocflowAdministration.DocumentRegistrationCards.*;
+import ru.motiw.web.model.DocflowAdministration.RouteSchemeEditor.BlockOfRouteScheme;
 import ru.motiw.web.model.Document.Document;
 import ru.motiw.web.model.Tasks.Project;
 import ru.motiw.web.steps.BaseSteps;
@@ -377,7 +378,7 @@ public class NewDocumentSteps extends BaseSteps {
      * Проверяем отображение надписи - Зарегистрировано, документ находится на рассмотрении - после сохранения документа
      */
     private NewDocumentSteps assertVerifyCreateDoc() {
-        $(By.xpath("//a[@class='error_message' and @style='text-decoration:none']")).waitUntil(visible,20000);
+        $(By.xpath("//a[@class='error_message' and @style='text-decoration:none']")).waitUntil(visible, 20000);
         return this;
     }
 
@@ -395,13 +396,39 @@ public class NewDocumentSteps extends BaseSteps {
                 .createProject(document.getProject()) // добавляем новый проект
                 .routeTab() // Выбор вкладки - Маршруты
                 .routeSelectionByName(document.getRouteSchemeForDocument().getNameRouteScheme());
-
-        toAddaUserToRoutingScheme(routeTableGridElements.getAddAUserToBlockDiagram(), document.getRouteSchemeForDocument().getUserRoute(),
-                document.getRouteSchemeForDocument().getReviewDuration());
-
+        addaUserToRoutingScheme(document);
         saveAndCreateNewDocument() // Сохранить и создать новый документ
                 .assertVerifyCreateDoc(); // Проверяем создание документа
         return this;
+    }
+
+    /**
+     * Добавить пользователя в роль в зависимости от типа блока и их кол-ва
+     */
+    private void addaUserToRoutingScheme(Document document) {
+        if (document.getRouteSchemeForDocument().getUserRouteWithCoupleBlocks() == null) {
+            // один блок - Постановка задачи по документу
+            toAddaUserToRoutingScheme(routeTableGridElements.getAddAUserToBlockDiagram(), document.getRouteSchemeForDocument().getUserRoute(),
+                    document.getRouteSchemeForDocument().getReviewDuration());
+            routeTableGridElements.getReviewDuration().click();
+            routeTableGridElements.getInputReviewDuration().setValue(document.getRouteSchemeForDocument().getReviewDuration());
+        } else {
+            // если блоков несколько, то находим их по названию этапа и обрабатываем их в зависимости от типа блока
+            for (BlockOfRouteScheme block : document.getRouteSchemeForDocument().getUserRouteWithCoupleBlocks()) {
+                switch (block.getTypesBlockOfRouteScheme()) {
+                    case ANY_BOSS:  // Произвольный начальник
+                        toAddaUserInContextMenuToRoutingScheme(block.getNameOfBlock(), block.getUserRoute().getLastName());
+                        break;
+                    case ANY_WORK_GROUP: // Произвольная рабочая группа
+                    case TASK_FOR_DOCUMENT:  // Постановка задачи по документу
+                        toAddaUserToRoutingScheme(routeTableGridElements.getAddAUserToBlockDiagram(block.getNameOfBlock()), block.getUsersRoute(),
+                                document.getRouteSchemeForDocument().getReviewDuration());
+                        break;
+                }
+                routeTableGridElements.getReviewDuration(block.getNameOfBlock()).click();
+                routeTableGridElements.getInputReviewDuration().setValue(document.getRouteSchemeForDocument().getReviewDuration());
+            }
+        }
     }
 
     /**
@@ -432,11 +459,16 @@ public class NewDocumentSteps extends BaseSteps {
                     + userRoute.getLastName() + " " + userRoute.getName() + " "
                     + userRoute.getPatronymic() + "']")).waitUntil(visible, 10000);
         }
+    }
 
-        routeTableGridElements.getReviewDuration().click();
-        routeTableGridElements.getInputReviewDuration().setValue(reviewDuration);
-
-
+    /**
+     * Добавить пользователя в роль через выбор пользователей из выпадающего списка
+     */
+    private void toAddaUserInContextMenuToRoutingScheme(String nameOfBlock,
+                                                        String userName) {
+        routeTableGridElements.getFieldForOpenContextMenuOfBlockDiagram(nameOfBlock).click();
+        routeTableGridElements.openContextMenuOfBlockDiagram().click();
+        routeTableGridElements.getUserInContextMenuOfBlockDiagram(userName).click();
     }
 
 

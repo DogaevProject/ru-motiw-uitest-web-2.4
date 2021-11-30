@@ -141,7 +141,7 @@ public class DocumentStepsMobile extends CardStepsMobile {
      * @param nameOfOperation - название операции
      * @param textForInput    - текст вводимый в инпут перед подтверждением операции
      */
-    void executionOperationWithAdditionText(String nameOfOperation, String textForInput) {
+    public void executionOperationWithAdditionText(String nameOfOperation, String textForInput) {
         // Находим локатор элемента кнопки операции
         getElementOfOperation(nameOfOperation, getCurrentLocation()).click();
         // Вводим текст в форму

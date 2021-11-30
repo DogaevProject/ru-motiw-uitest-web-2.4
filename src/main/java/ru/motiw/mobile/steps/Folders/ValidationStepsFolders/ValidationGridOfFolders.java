@@ -46,6 +46,7 @@ public class ValidationGridOfFolders extends InternalStepsMobile {
 
         // Если после завершения задачи мы не перешли в папку, то переходим в созданную папку
         if (!internalElementsMobile.getMainTitle().is(text(folder.getNameFolder()))) {
+            refresh(); // goToHome() бывает клик не на ту кнопку, поэтому перезагружаем
             goToHome();
             gridOfFoldersSteps.openFolder(folder);  // входим в созданную папку
         }

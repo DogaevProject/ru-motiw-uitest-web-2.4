@@ -6,6 +6,7 @@ import ru.motiw.mobile.model.FilesForAttachment;
 import ru.motiw.web.model.Administration.Users.Department;
 import ru.motiw.web.model.Administration.Users.Employee;
 import ru.motiw.web.model.DocflowAdministration.DocumentRegistrationCards.DocRegisterCards;
+import ru.motiw.web.model.DocflowAdministration.RouteSchemeEditor.BlockOfRouteScheme;
 import ru.motiw.web.model.DocflowAdministration.RouteSchemeEditor.RouteSchemeEditor;
 import ru.motiw.web.model.Document.Document;
 import ru.motiw.web.model.Document.ExecutionOfDocument;
@@ -16,6 +17,8 @@ import static ru.motiw.data.dataproviders.Administration.getRandomDepartment;
 import static ru.motiw.data.dataproviders.Administration.getRandomEmployer;
 import static ru.motiw.data.dataproviders.Tasks.getRandomProject;
 import static ru.motiw.mobile.model.Document.TypeOperationsOfDocument.*;
+import static ru.motiw.web.model.DocflowAdministration.RouteSchemeEditor.TypesBlockOfRouteScheme.ANY_BOSS;
+import static ru.motiw.web.model.DocflowAdministration.RouteSchemeEditor.TypesBlockOfRouteScheme.ANY_WORK_GROUP;
 
 
 /**
@@ -38,6 +41,10 @@ public abstract class DocflowAdministrationMobile extends BaseTest {
     // Инициализация РКД и её настроек
     private DocRegisterCards registerCards = new DocRegisterCards("wD_Тестовая карточка " + randomString(20))
             .setCheckBoxUseAllPossibleRoutes(true); // Использовать все возможные маршруты
+
+    private DocRegisterCards registerCards_2 = new DocRegisterCards("wD_Тестовая карточка " + randomString(20))
+            .setCheckBoxUseAllPossibleRoutes(true); // Использовать все возможные маршруты
+
 
     //----------------------------------------------------------------------------------------------------------- Инициализация Документа
     private Document document = new Document()
@@ -73,6 +80,40 @@ public abstract class DocflowAdministrationMobile extends BaseTest {
                                     .setExecutiveManagers(new Employee[]{employee[2]})
 
                     } // Резолюция
+            );
+
+
+    //----------------------------------------------------------------------------------------------------------- Инициализация Документа для согласования
+    private Document documentForConsideration_1 = new Document()
+
+            .setDocumentType(registerCards) // Тип документа
+            .setAuthorOfDocument(EMPLOYEE_ADMIN)
+            .setDateRegistration(randomDateTime()) // Дата регистрации
+            .setProject(getRandomProject()) // Инициализируем проект документа
+            .setValueFiles(new String[]{file[0]})
+            .setRouteSchemeForDocument(new RouteSchemeEditor()
+                    .setRouteScheme("Маршрут согласования договора")
+                    .setReviewDuration(randomInt(999))
+                    .setUserRouteWithCoupleBlocks(new BlockOfRouteScheme[]{
+                            new BlockOfRouteScheme("Произвольная рабочая группа", new Employee[]{employee[0]}, ANY_WORK_GROUP),
+                            new BlockOfRouteScheme("Произвольный начальник", employee[1], ANY_BOSS)
+                    }) // Добавляем в маршрут созданного пользователя
+            );
+
+    private Document documentForConsideration_2 = new Document()
+
+            .setDocumentType(registerCards_2) // Тип документа
+            .setAuthorOfDocument(EMPLOYEE_ADMIN)
+            .setDateRegistration(randomDateTime()) // Дата регистрации
+            .setProject(getRandomProject()) // Инициализируем проект документа
+            .setValueFiles(new String[]{file[0]})
+            .setRouteSchemeForDocument(new RouteSchemeEditor()
+                    .setRouteScheme("Маршрут согласования договора")
+                    .setReviewDuration(randomInt(999))
+                    .setUserRouteWithCoupleBlocks(new BlockOfRouteScheme[]{
+                            new BlockOfRouteScheme("Произвольная рабочая группа", new Employee[]{employee[0]}, ANY_WORK_GROUP),
+                            new BlockOfRouteScheme("Произвольный начальник", employee[1], ANY_BOSS)
+                    }) // Добавляем в маршрут созданного пользователя
             );
 
     // ----------------------------------------------------------------------------------------------------------- Инициализация Папки
@@ -112,6 +153,32 @@ public abstract class DocflowAdministrationMobile extends BaseTest {
                         registerCards,
                         //переменная объекта - ДОКУМЕНТ
                         document,
+                        //переменная объекта - Папка
+                        folder
+                }
+        };
+    }
+
+
+    /**
+     * Параметризация - Инициализируем модель - Объекты необходимые для проверки согласования документа
+     *
+     * @return массив параметров объектов системы
+     */
+    @DataProvider
+    public Object[][] objectDataForConsiderationDocument() {
+        return new Object[][]{
+                {
+                        //переменная объекта - ПОДРАЗДЕЛЕНИЕ
+                        department,
+                        //переменная объекта - ПОЛЬЗОВАТЕЛЬ
+                        employee,
+                        //переменная объекта - РКД
+                        registerCards,
+                        registerCards_2,
+                        //переменная объекта - ДОКУМЕНТ
+                        documentForConsideration_1,
+                        documentForConsideration_2,
                         //переменная объекта - Папка
                         folder
                 }

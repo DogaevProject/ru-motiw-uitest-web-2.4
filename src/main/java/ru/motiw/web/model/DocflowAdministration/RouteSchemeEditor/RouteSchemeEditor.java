@@ -11,6 +11,7 @@ public class RouteSchemeEditor {
     private String routeSchemeEditor = "";
     private String ReviewDuration = "";
     private Employee[] userRoute;
+    private BlockOfRouteScheme[] blockOfRouteSchemes;
 
     /**
      * Участники рассмотрения документа
@@ -21,6 +22,18 @@ public class RouteSchemeEditor {
 
     public RouteSchemeEditor setUserRoute(Employee[] userRoute) {
         this.userRoute = userRoute;
+        return this;
+    }
+
+    /**
+     * Участники рассмотрения документа  - c указанием типов блоков мс, для случая заполнения нескольких блоков
+     */
+    public BlockOfRouteScheme[] getUserRouteWithCoupleBlocks() {
+        return blockOfRouteSchemes;
+    }
+
+    public RouteSchemeEditor setUserRouteWithCoupleBlocks(BlockOfRouteScheme[] blockOfRouteScheme) {
+        this.blockOfRouteSchemes = blockOfRouteScheme;
         return this;
     }
 
