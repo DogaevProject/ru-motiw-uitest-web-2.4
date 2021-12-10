@@ -2,6 +2,7 @@ package ru.motiw.web.steps.DocflowAdministration.DocumentRegistrationCards;
 
 import com.codeborne.selenide.ex.ElementNotFound;
 import org.openqa.selenium.By;
+import ru.motiw.web.elements.elementsweb.DocflowAdministration.DocumentRegistrationCards.FormDocRegisterCardsEditGeneralElements;
 import ru.motiw.web.steps.BaseSteps;
 import ru.motiw.web.elements.elementsweb.DocflowAdministration.DocumentRegistrationCards.GridDocRegisterCardsElements;
 
@@ -16,6 +17,7 @@ import static ru.motiw.web.model.URLMenu.DOCUMENT_REGISTER_CARDS;
 public class GridDocRegisterCardsSteps extends BaseSteps {
 
     private GridDocRegisterCardsElements gridDocRegisterCardsElements = page(GridDocRegisterCardsElements.class);
+    private FormDocRegisterCardsEditGeneralElements formEditRCDGeneralElement = page(FormDocRegisterCardsEditGeneralElements.class);
 
 
     /**
@@ -55,8 +57,20 @@ public class GridDocRegisterCardsSteps extends BaseSteps {
      */
     public FormDocRegisterCardsEditGeneralSteps addDocRegisterCards() {
         sleep(500);
-        $(gridDocRegisterCardsElements.getAddOnRegCards()).shouldBe(visible).click();
+        try {
+            $(gridDocRegisterCardsElements.getAddOnRegCards()).waitUntil(visible, 5000).click();
+        } catch (AssertionError e) {
+            refresh();
+            $(gridDocRegisterCardsElements.getAddOnRegCards()).waitUntil(visible, 5000).click();
+        }
         waitForTaskMaskDRC();
+        try {
+            formEditRCDGeneralElement.getNameDocRegCards().waitUntil(visible, 10000);
+        } catch (AssertionError e) {
+            // Обработка зависания загрузки ркд
+            goToURLGridDocRegisterCards();
+            waitForTaskMaskDRC();
+        }
         return page(FormDocRegisterCardsEditGeneralSteps.class);
     }
 

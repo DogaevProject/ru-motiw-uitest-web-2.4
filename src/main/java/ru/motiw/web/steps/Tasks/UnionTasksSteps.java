@@ -4,7 +4,9 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.ex.ElementNotFound;
 import com.codeborne.selenide.ex.ElementShould;
+import com.codeborne.selenide.ex.UIAssertionError;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -17,6 +19,7 @@ import ru.motiw.web.steps.Home.InternalSteps;
 
 import java.util.ArrayList;
 
+import static com.codeborne.selenide.Condition.exist;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
@@ -44,8 +47,7 @@ public class UnionTasksSteps extends BaseSteps {
      * Проверка загрузки страницы
      */
     private UnionTasksSteps ensurePageLoaded() {
-        sleep(500);
-        $(By.xpath("//div[@id='ext-comp-1001-bodyWrap']")).shouldBe(visible); // Панель ПУГЗ
+        $(By.xpath("//div[@id='ext-comp-1001-bodyWrap']")).waitUntil(visible, 5000); // Панель ПУГЗ
         $(By.xpath("//div[contains(@data-ref,'bodyWrap')]/child::div[contains(@id,'taskpagingtoolbar')]"))
                 .shouldBe(visible); // Панель Навигации по гриду
         return this;
@@ -101,10 +103,42 @@ public class UnionTasksSteps extends BaseSteps {
         ensurePageLoaded();
         $(By.xpath("//span[contains(@class,'x-tree-node-text ')]/b[contains(text(),'" + parseNameFolder(folder.getNameFolder())[0] + "')]")).click();
         waitMaskForGridTask();
-        $$(By.xpath("//a[contains(@href,'/user/unionmessage') and text()='" + task.getTaskName() + "']"))
-                .first().shouldBe(visible);
+        try {
+            $$(By.xpath("//a[contains(@href,'/user/unionmessage') and text()='" + task.getTaskName() + "']"))
+                    .first().shouldBe(visible);
+        } catch (UIAssertionError e) {
+            refresh();
+            waitMaskForGridTask();
+            ensurePageLoaded();
+            $(By.xpath("//span[contains(@class,'x-tree-node-text ')]/b[contains(text(),'" + parseNameFolder(folder.getNameFolder())[0] + "')]")).click();
+            waitMaskForGridTask();
+            $$(By.xpath("//a[contains(@href,'/user/unionmessage') and text()='" + task.getTaskName() + "']"))
+                    .first().shouldBe(visible);
+        }
         SelenideElement link = $(By.xpath("//a[text()='" + task.getTaskName() + "']"));
         openInNewWindow(link.getAttribute("href"));
+    }
+
+
+    /**
+     * Проверка что задачи нет в Папке
+     * Задачи/Задачи
+     *
+     * @param task   Название задачи
+     * @param folder папка для поиска задачи в гриде
+     */
+    public void verifyThatTaskNotExistingInTheFolder(Task task, Folder folder) {
+        waitMaskForGridTask();
+        ensurePageLoaded();
+        $$(By.xpath("//a[contains(@href,'/user/unionmessage') and contains(text(),'" + task.getTaskName() + "')]"))
+                .first().shouldNotBe(visible);
+        //  через поиск по гриду
+        switchTo().defaultContent();
+        findTask(task.getTaskName());
+        switchTo().frame($(By.cssSelector("#flow")));
+        waitMaskForGridTask();
+        $$(By.xpath("//a[contains(@href,'/user/unionmessage') and contains(text(),'" + task.getTaskName() + "')]"))
+                .first().shouldNotBe(visible);
     }
 
     /**
@@ -205,9 +239,30 @@ public class UnionTasksSteps extends BaseSteps {
             unionTasksElements.getFolderInTheGroup().first().contextClick();
         }
         try {
-            unionTasksElements.getAddFolder().waitUntil(visible, 2000).click(); // Добавить папку
-        } catch (ElementShould e) {
+            unionTasksElements.getAddFolder().waitUntil(visible, 2000);
+            sleep(500);
+            unionTasksElements.getAddFolder().click(); // Добавить папку
+        } catch (UIAssertionError e) {
             // Обработка случая когда меню папки с первого клика не открывается
+            goToUnionTasks();
+            beforeAddFolder(21);
+            if (folder.getParentFolder() != null) {
+                selectTheParentFolder(folder.getParentFolder()); // Выбираем родительскую папку папку и выводим КМ для взаимодействия с папкой
+            } else {
+                waitMaskForGridTask();
+                unionTasksElements.getFolderInTheGroup().first().contextClick();
+            }
+            unionTasksElements.getAddFolder().waitUntil(visible, 2000);
+            sleep(500);
+            unionTasksElements.getAddFolder().click(); // Добавить папку
+        }
+
+        try {
+            $(By.xpath("//iframe[contains(@src,'/user/smart_folder')]")).waitUntil(visible, 10000);
+        } catch (ElementShould e) {
+            // Обработка случая когда открытие папки зависает
+            goToUnionTasks();
+            beforeAddFolder(21);
             if (folder.getParentFolder() != null) {
                 selectTheParentFolder(folder.getParentFolder()); // Выбираем родительскую папку папку и выводим КМ для взаимодействия с папкой
             } else {
@@ -217,6 +272,35 @@ public class UnionTasksSteps extends BaseSteps {
             unionTasksElements.getAddFolder().click(); // Добавить папку
         }
         getFrameObject($(By.xpath("//iframe[contains(@src,'/user/smart_folder')]"))); // уходим во фрейм окна - Редактирование папки
+    }
+
+    /**
+     * Развернем все ветви объекта. Оверрайт специльно для СП, т.к тут периодически нет нужного элемента
+     *
+     * @param knot  локатор узла если есть как таковой
+     * @param nodes локатор элемента для взаиммодействия
+     */
+    protected void unwrapAllNodes(SelenideElement knot, By nodes) {
+        try {
+            while (isElementPresent(nodes)) {
+                if (isElementPresent(nodes)) {
+                    knot.click();
+                }
+            }
+        } catch (NoSuchElementException n) {
+            // периодически нет элемента knot или не дожидается его. Попытка обработать это.
+            refresh();
+            knot.waitUntil(visible, 10000);
+            try {
+                while (isElementPresent(nodes)) {
+                    if (isElementPresent(nodes)) {
+                        knot.click();
+                    }
+                }
+            } catch (NoSuchElementException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -273,9 +357,30 @@ public class UnionTasksSteps extends BaseSteps {
                 SelenideElement elementOfFolder = $(By.xpath("//span[contains(@class,'x-tree-node-text ')]/b[contains(text(),'"
                         + parseNameFolder(folder.getNameFolder())[0] + "')]"));
                 elementOfFolder.shouldBe(visible).contextClick();
-
-                unionTasksElements.getDeleteFolder().waitUntil(visible, 2000).click(); // Удалить папку
-                $(By.xpath("//span[text()=\"Да\"]/ancestor::span[@class=\"x-btn-wrap x-btn-wrap-default-small \"]")).waitUntil(visible, 2000).click();
+                try {
+                    unionTasksElements.getDeleteFolder().waitUntil(visible, 2000);
+                } catch (AssertionError e) {
+                    // Обработка случая когда contextClick() не успел сработать
+                    elementOfFolder.shouldBe(visible).contextClick();
+                    unionTasksElements.getDeleteFolder().waitUntil(visible, 2000);
+                }
+                sleep(500);
+                unionTasksElements.getDeleteFolder().click(); // Удалить папку
+                try {
+                    $(By.xpath("//span[text()=\"Да\"]/ancestor::span[@class=\"x-btn-wrap x-btn-wrap-default-small \"]")).waitUntil(visible, 5000).click();
+                } catch (AssertionError assertionError) {
+                    // Обработка случая когда клик по getDeleteFolder() не успел сработать
+                    goToUnionTasks();
+                    beforeAddFolder(21);
+                    waitMaskForGridTask();
+                    SelenideElement elementOfFolder2 = $(By.xpath("//span[contains(@class,'x-tree-node-text ')]/b[contains(text(),'"
+                            + parseNameFolder(folder.getNameFolder())[0] + "')]"));
+                    elementOfFolder2.shouldBe(visible).contextClick();
+                    unionTasksElements.getDeleteFolder().waitUntil(visible, 2000);
+                    sleep(500);
+                    unionTasksElements.getDeleteFolder().click(); // Удалить папку
+                    $(By.xpath("//span[text()=\"Да\"]/ancestor::span[@class=\"x-btn-wrap x-btn-wrap-default-small \"]")).waitUntil(visible, 5000).click();
+                }
                 waitMaskForGridTask();
                 elementOfFolder.shouldNotBe(visible); // Проверяем что удаленная папка не отображается на Панели управления группировкой задач (ПУГЗ)
             }

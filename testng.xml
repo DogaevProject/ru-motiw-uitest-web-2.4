@@ -25,6 +25,8 @@
     <test name="module: Tasks (Web)">
         <classes>
             <class name="ru.motiw.testsWeb.Tasks.CreateTaskTest"/>
+            <class name="ru.motiw.testsWeb.Tasks.CreateTemplateOfTask"/>
+            <class name="ru.motiw.testsWeb.Tasks.UnionTasksTest"/>
         </classes>
     </test>
 
@@ -33,12 +35,14 @@
             <class name="ru.motiw.testsWeb.DocflowAdministration.DictionaryEditorTest"/>
             <class name="ru.motiw.testsWeb.DocflowAdministration.DocumentRegistrationCardsTest"/>
             <class name="ru.motiw.testsWeb.Document.CreateDocumentTest"/>
+            <class name="ru.motiw.testsWeb.Document.ConsiderationDocumentTest"/>
         </classes>
     </test>
 
     <test name="module: Options (Web)">
         <classes>
             <class name="ru.motiw.testsWeb.EventTemplatesTest"/>
+            <class name="ru.motiw.testsWeb.DocumentationTest"/>
         </classes>
     </test>
 
@@ -46,14 +50,14 @@
     <test name="module: Tasks (Mobile)">
         <classes>
             <class name="ru.motiw.testMobile.CreateTaskMobileTest"/>
-            <class name="ru.motiw.testMobile.annotationOnFiles.AnnotationOnFilesInTaskMobileTest"/>
         </classes>
     </test>
 
     <test name="module: Documents (Mobile)">
         <classes>
             <class name="ru.motiw.testMobile.CreateDocumentMobileTest"/>
-            <class name="ru.motiw.testMobile.annotationOnFiles.AnnotationOnFilesInDocumentMobileTest"/>
+            <class name="ru.motiw.testMobile.ConsiderationDocumentMobileTest"/>
+            <class name="ru.motiw.testMobile.ApproveResolutionMobileTest"/>
         </classes>
     </test>
 

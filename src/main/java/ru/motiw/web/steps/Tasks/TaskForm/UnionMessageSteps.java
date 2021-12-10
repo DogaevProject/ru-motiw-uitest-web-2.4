@@ -1,5 +1,6 @@
 package ru.motiw.web.steps.Tasks.TaskForm;
 
+import com.codeborne.selenide.Condition;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import ru.motiw.web.elements.elementsweb.Tasks.TaskForm.UnionMessageElements;
@@ -159,4 +160,24 @@ public class UnionMessageSteps extends UnionMessageNewSteps {
         }
         return this;
     }
+
+    /**
+     * Переход в документ
+     */
+    public UnionMessageSteps goToDocument() {
+        unionMessageElements.getButtonGoToDocument().click();
+        return this;
+    }
+
+    /**
+     * Проверяем, что кнопки для согласования документа отображаются
+     */
+    public UnionMessageSteps verifyButtonsOfConsiderationIsVisible() {
+        unionMessageElements.getButtonConsideration().shouldBe(Condition.visible);
+        unionMessageElements.getButtonConsiderationWithComment().shouldBe(Condition.visible);
+        unionMessageElements.getButtonDenialReview().shouldBe(Condition.visible);
+        unionMessageElements.getButtonBackToRevision().shouldBe(Condition.visible);
+        return this;
+    }
+
 }

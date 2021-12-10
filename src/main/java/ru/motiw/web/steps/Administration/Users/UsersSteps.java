@@ -2,6 +2,7 @@ package ru.motiw.web.steps.Administration.Users;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.ex.UIAssertionError;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.testng.AssertJUnit;
@@ -377,12 +378,25 @@ public class UsersSteps extends DepartmentSteps {
      * @param user атрибуты пользователя
      */
     public UsersSteps createUser(Employee user) {
+        beforeCreationDepartmentsAndUsers();
         if (user.getDepartment() != null) {
             selectTheParentUnit(user.getDepartment()); // Выбираем подразделение
         }
-        usersElements.getButtonAddUser().click(); // Добавить пользователя
-
-        switchTo().frame($(By.xpath("//iframe[contains(@id,'component-')]")));
+        try {
+            usersElements.getButtonAddUser().click(); // Добавить пользователя
+            switchTo().frame($(By.xpath("//iframe[contains(@id,'component-')]")));
+            usersElements.getLastName().waitUntil(visible, 10000);
+        } catch (UIAssertionError e) {
+            // Обработка случая зависания открытия формы
+            goToURLDepartments();
+            //выполняем действия повторно
+            beforeCreationDepartmentsAndUsers();
+            if (user.getDepartment() != null) {
+                selectTheParentUnit(user.getDepartment()); // Выбираем подразделение
+            }
+            usersElements.getButtonAddUser().click(); // Добавить пользователя
+            switchTo().frame($(By.xpath("//iframe[contains(@id,'component-')]")));
+        }
         fillFieldsOfCardUser(user);
         try {
             saveUser();

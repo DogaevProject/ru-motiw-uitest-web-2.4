@@ -23,7 +23,7 @@ public class EditDocumentRouteTabElements {
      * @param nameOfBlock - название этапа мс
      */
     public SelenideElement statusBlockDiagramIsReviewed(String nameOfBlock, String userName) {
-        return $(By.xpath("//table//td//span[contains(text(),'" + nameOfBlock + "')]/ancestor::tr/following::tr[1]//a[contains(text(),'" + userName  + "')]/ancestor::tr//td[10]/div[text()='Рассмотрен']"));
+        return $(By.xpath("//table//td//span[contains(text(),'" + nameOfBlock + "')]/ancestor::tr/following::tr[1]//a[contains(text(),'" + userName  + "')]/ancestor::tr//div[text()='Рассмотрен']"));
     }
 
     /**
@@ -32,7 +32,7 @@ public class EditDocumentRouteTabElements {
      * @param nameOfBlock - название этапа мс
      */
     public SelenideElement statusBlockDiagramIsReviewedWithComment(String nameOfBlock, String userName) {
-        return $(By.xpath("//table//td//span[contains(text(),'" + nameOfBlock + "')]/ancestor::tr/following::tr[1]//a[contains(text(),'" + userName  + "')]/ancestor::tr//td[10]/div[text()='Рассмотрен (с замечаниями)']"));
+        return $(By.xpath("//table//td//span[contains(text(),'" + nameOfBlock + "')]/ancestor::tr/following::tr[1]//a[contains(text(),'" + userName  + "')]/ancestor::tr//div[text()='Рассмотрен (с замечаниями)']"));
     }
 
     /**
@@ -41,7 +41,7 @@ public class EditDocumentRouteTabElements {
      * @param nameOfBlock - название этапа мс
      */
     public SelenideElement statusBlockDiagramIsDenialReview(String nameOfBlock, String userName) {
-        return $(By.xpath("//table//td//span[contains(text(),'" + nameOfBlock + "')]/ancestor::tr/following::tr[1]//a[contains(text(),'" + userName  + "')]/ancestor::tr//td[10]/div[text()='Отказ согласовать']"));
+        return $(By.xpath("//table//td//span[contains(text(),'" + nameOfBlock + "')]/ancestor::tr/following::tr[1]//a[contains(text(),'" + userName  + "')]/ancestor::tr//div[text()='Отказ согласовать']"));
     }
 
     /**
@@ -50,7 +50,16 @@ public class EditDocumentRouteTabElements {
      * @param nameOfBlock - название этапа мс
      */
     public SelenideElement statusBlockDiagramIsBackToRevision(String nameOfBlock, String userName) {
-        return $(By.xpath("//table//td//span[contains(text(),'" + nameOfBlock + "')]/ancestor::tr/following::tr[1]//a[contains(text(),'" + userName  + "')]/ancestor::tr//td[10]/div[text()='Документ отправлен на доработку']"));
+        return $(By.xpath("//table//td//span[contains(text(),'" + nameOfBlock + "')]/ancestor::tr/following::tr[1]//a[contains(text(),'" + userName  + "')]/ancestor::tr//div[text()='Документ отправлен на доработку']"));
+    }
+
+    /**
+     * Вкладка Маршрут -  значение в колонке Статус для рассмотревшего пользователя в строке конкретного этапа мс = На рассмотрении
+     *
+     * @param nameOfBlock - название этапа мс
+     */
+    public SelenideElement statusBlockDiagramIsOnReview(String nameOfBlock, String userName) {
+        return $(By.xpath("//table//td//span[contains(text(),'" + nameOfBlock + "')]/ancestor::tr/following::tr[1]//a[contains(text(),'" + userName  + "')]/ancestor::tr//div[text()='На рассмотрении']"));
     }
 
 }

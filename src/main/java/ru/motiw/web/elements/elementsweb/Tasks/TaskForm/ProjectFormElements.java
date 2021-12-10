@@ -1,7 +1,10 @@
 package ru.motiw.web.elements.elementsweb.Tasks.TaskForm;
 
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindBy;
+
+import static com.codeborne.selenide.Selenide.$;
 
 /**
  * Элементы - форма создания нового Проекта
@@ -100,6 +103,13 @@ public class ProjectFormElements {
      */
     public SelenideElement getProjectSave() {
         return projectSave;
+    }
+
+    /**
+     * Кнопка закрытия формы создания проекта
+     */
+    public SelenideElement getCloseProjectForm() {
+        return $(By.xpath("//span[@class=\"x-window-header-text\" and text()=\"Создать новый проект\"]/preceding-sibling::div[@class=\"x-tool x-tool-close\"]"));
     }
 
 

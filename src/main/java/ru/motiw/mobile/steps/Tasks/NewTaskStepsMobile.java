@@ -476,6 +476,7 @@ public class NewTaskStepsMobile extends CardTaskStepsMobile {
                 assertTrue(file.getPath().replace(File.separatorChar, '/').endsWith("src/main/resources/attachfiles/" + nameOfFile + ""));
                 assertTrue(validateFilesStepsMobile.verifyNameFileInTheListFiles(nameOfFile), "Не пройдена проверка названий Файлов в списке прикрепленных файлов");
             }
+        sleep(2000);
         return this;
     }
 

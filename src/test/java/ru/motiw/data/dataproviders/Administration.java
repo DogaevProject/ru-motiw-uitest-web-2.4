@@ -57,7 +57,7 @@ public abstract class Administration extends BaseTest {
                 .setNewPassword(newPass).setNewСonfirmationPassword(newPass)
                 .setAdditionalNumber(randomInt(100))
                 .setUserForcedSorting(randomInt(100)).setStatus(randomEnum(Status.class))
-                .setNeedsPasswordChange(randomBoolean()).setModule(randomEnum(Module.class));
+                .setNeedsPasswordChange(false);
     }
 
     // Пользователи
