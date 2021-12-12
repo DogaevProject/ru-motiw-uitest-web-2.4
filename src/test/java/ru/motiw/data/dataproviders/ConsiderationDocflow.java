@@ -130,7 +130,6 @@ public abstract class ConsiderationDocflow extends DocflowAdministration {
             .setAuthorOfDocument(EMPLOYEE_ADMIN)
             .setDateRegistration(randomDateTime()) // Дата регистрации
             .setProject(getRandomProject()) // Инициализируем проект документа
-            .setValueFiles(new String[]{file[0]})
             // Осуществляем заполнение (наполнение) полей документа через массив
             .setDocumentFields(new FieldDocument[]{
                             (FieldDocument) fieldUniqueString.setValueField(task.getTaskName())

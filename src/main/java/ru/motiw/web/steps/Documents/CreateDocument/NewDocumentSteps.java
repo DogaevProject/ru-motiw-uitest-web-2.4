@@ -24,8 +24,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 
 import static com.codeborne.selenide.CollectionCondition.size;
-import static com.codeborne.selenide.Condition.disappear;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static org.testng.AssertJUnit.fail;
@@ -95,9 +94,9 @@ public class NewDocumentSteps extends BaseSteps {
         if (project == null) {
             return this;
         } else {
-            newDocumentCartTabElements.getNewProject().click();
-            getFrameObject($(projectFormElements.getProjectFrame()));
             try {
+                newDocumentCartTabElements.getNewProject().click();
+                getFrameObject($(projectFormElements.getProjectFrame()));
                 projectFormElements.getProjectField().waitUntil(visible, 10000);
             } catch (UIAssertionError e) {
                 // Обработка зависания загрузки формы
@@ -195,7 +194,7 @@ public class NewDocumentSteps extends BaseSteps {
         if (valueLine == null) {
             return this;
         } else {
-            $(By.xpath("//table//tr/td[1]/div[contains(text(),'" + nameField + "')]/../../td[2]/div")).click();
+            $(By.xpath("//table//tr/td[1]/div[contains(text(),'" + nameField + "')]")).click();
             try {
                 $(By.xpath
                         ("//input[contains(@id,'ext-comp')][ancestor::div[contains(@style,'visibility: visible')]]")).shouldBe(visible);
@@ -203,7 +202,7 @@ public class NewDocumentSteps extends BaseSteps {
             } catch (ElementNotFound e) {
                 newDocumentCartTabElements.getInput2Field().setValue(valueLine);
             } finally {
-                sleep(200);
+                sleep(1000);
             }
         }
         return this;
@@ -305,40 +304,42 @@ public class NewDocumentSteps extends BaseSteps {
         if (customField == null) {
             return this;
         } else
-            for (FieldDocument customsField : customField) {
-                // 1. ЧИСЛО
-                if (customsField.getObjectFieldDocument() instanceof FieldTypeNumberDocument) {
-                    enterValueInFieldDocument(customsField.getDocumentFieldName(), customsField.getValueField());
-                    // 2. ДАТА
-                } else if (customsField.getObjectFieldDocument() instanceof FieldTypeDateDocument) {
-                    enterValueInFieldDocument(customsField.getDocumentFieldName(), customsField.getValueField());
-                    // 3. СТРОКА
-                } else if (customsField.getObjectFieldDocument() instanceof FieldTypeStringDocument && customsField.getUniqueField()) {
-                    enterValueInFieldDocument(customsField.getDocumentFieldName(), customsField.getValueField());
-                    // 4. ТЕКСТ
-                } else if (customsField.getObjectFieldDocument() instanceof FieldTypeTextDocument) {
-                    selEditText(customsField.getDocumentFieldName(), customsField.getValueField());
-                    // 5. СЛОВАРЬ
-                } else if (customsField.getObjectFieldDocument() instanceof FieldTypeDictionaryDocument) {
-                    selValueDictionary(customsField.getDocumentFieldName(), customsField.getValueDictionaryEditor());
-                    // 6. ПОДРАЗДЕЛЕНИЕ
-                } else if (customsField.getObjectFieldDocument() instanceof FieldTypeDepartmentDocument) {
-                    selEditDepartment(customsField.getDocumentFieldName(), customsField.getValueDepartment());
-                    // 7. СОТРУДНИК
-                } else if (customsField.getObjectFieldDocument() instanceof FieldTypeEmployeeDocument) {
-                    selLiveSearchEmployee(customsField.getDocumentFieldName(), customsField.getValueEmployee());
-                    // 8. ДОКУМЕНТ
-                } else if (customsField.getObjectFieldDocument() instanceof FieldTypeDocumentDocument) {
-                    // TODO input field Document
-                    // 9. НУМЕРАТОР
-                } else if (customsField.getObjectFieldDocument() instanceof FieldTypeNumeratorDocument) {
-                    // 10. СПРАВОЧНИК
-                } else if (customsField.getObjectFieldDocument() instanceof FieldTypeDirectoryDocument) {
-                    // TODO input field Directory
-
-                    // TODO добавляем проверку - заполнение значения поля документа
-                }
+            $(By.xpath("//div[@class=\"x-grid3-hd-inner x-grid3-hd-value\"]")).click();
+        for (FieldDocument customsField : customField) {
+            // 1. ЧИСЛО
+            if (customsField.getObjectFieldDocument() instanceof FieldTypeNumberDocument) {
+                enterValueInFieldDocument(customsField.getDocumentFieldName(), customsField.getValueField());
+                // 2. ДАТА
+            } else if (customsField.getObjectFieldDocument() instanceof FieldTypeDateDocument) {
+                enterValueInFieldDocument(customsField.getDocumentFieldName(), customsField.getValueField());
+                // 3. СТРОКА
+            } else if (customsField.getObjectFieldDocument() instanceof FieldTypeStringDocument && customsField.getUniqueField()) {
+                enterValueInFieldDocument(customsField.getDocumentFieldName(), customsField.getValueField());
+                // 4. ТЕКСТ
+            } else if (customsField.getObjectFieldDocument() instanceof FieldTypeTextDocument) {
+                selEditText(customsField.getDocumentFieldName(), customsField.getValueField());
+                // 5. СЛОВАРЬ
+            } else if (customsField.getObjectFieldDocument() instanceof FieldTypeDictionaryDocument) {
+                selValueDictionary(customsField.getDocumentFieldName(), customsField.getValueDictionaryEditor());
+                // 6. ПОДРАЗДЕЛЕНИЕ
+            } else if (customsField.getObjectFieldDocument() instanceof FieldTypeDepartmentDocument) {
+                selEditDepartment(customsField.getDocumentFieldName(), customsField.getValueDepartment());
+                // 7. СОТРУДНИК
+            } else if (customsField.getObjectFieldDocument() instanceof FieldTypeEmployeeDocument) {
+                selLiveSearchEmployee(customsField.getDocumentFieldName(), customsField.getValueEmployee());
+                // 8. ДОКУМЕНТ
+            } else if (customsField.getObjectFieldDocument() instanceof FieldTypeDocumentDocument) {
+                // TODO input field Document
+                // 9. НУМЕРАТОР
+            } else if (customsField.getObjectFieldDocument() instanceof FieldTypeNumeratorDocument) {
+                // 10. СПРАВОЧНИК
+            } else if (customsField.getObjectFieldDocument() instanceof FieldTypeDirectoryDocument) {
+                // TODO input field Directory
             }
+        }
+        $(By.xpath("//div[@class=\"x-grid3-hd-inner x-grid3-hd-value\"]")).click();
+        sleep(500);
+        verifyValueCustomFieldsDocument(customField);
         return this;
     }
 
@@ -498,6 +499,38 @@ public class NewDocumentSteps extends BaseSteps {
         return this;
     }
 
+    /**
+     * Общий метод  проверки полей документа
+     *
+     * @param nameField имя поля документа для заполнения
+     * @param valueLine передаваемое значение для заполнения
+     */
+    private NewDocumentSteps verifyValueInFieldDocument(String nameField, String valueLine) {
+        if (valueLine == null) {
+            return this;
+        } else {
+            $(By.xpath("//table//tr/td[1]/div[contains(text(),'" + nameField + "')]/../../td[2]/div")).waitUntil(visible, 5000).click();
+            $(By.xpath
+                    ("//input[contains(@id,'ext-comp')][ancestor::div[contains(@style,'visibility: visible')]]")).shouldBe(visible);
+            newDocumentCartTabElements.getInputField().shouldHave(value(valueLine));
+        }
+        return this;
+    }
 
+    /**
+     * Проверка значений в пользовательских полях документа
+     */
+    public NewDocumentSteps verifyValueCustomFieldsDocument(FieldDocument[] fieldDocuments) {
+        if (fieldDocuments == null) {
+            return this;
+        } else
+            for (FieldDocument customsField : fieldDocuments) {
+                // ЧИСЛО,  ДАТА, СТРОКА
+                if (customsField.getObjectFieldDocument() instanceof FieldTypeNumberDocument) {
+                    verifyValueInFieldDocument(customsField.getDocumentFieldName(), customsField.getValueField());
+                }
+            }
+        return this;
+    }
 }
 
