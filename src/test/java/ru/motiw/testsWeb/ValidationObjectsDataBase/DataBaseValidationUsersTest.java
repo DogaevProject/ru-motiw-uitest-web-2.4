@@ -46,7 +46,7 @@ public class DataBaseValidationUsersTest extends BaseTest {
             .setNeedsPasswordChange(false);
 
 
-    //@Test(priority = 1)
+    @Test(priority = 1)
     public void checkValidationOfUsersInTheDatabase() throws SQLException, ClassNotFoundException {
 
         try {

@@ -72,7 +72,7 @@ public class DocumentStepsMobile extends CardStepsMobile {
             if (documentElementsMobile.getAllButtonsOfTab().size() < 1) {
                 refresh();
             }
-                documentElementsMobile.getAllButtonsOfTab().shouldHave(CollectionCondition.sizeGreaterThan(0), 10000);
+                documentElementsMobile.getAllButtonsOfTab().shouldHave(CollectionCondition.sizeGreaterThan(0), 30000);
                 elementOfOperation = documentElementsMobile.getAllButtonsOfTab();
         }
         if (elementOfOperation == null) {

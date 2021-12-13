@@ -12,6 +12,7 @@ import ru.motiw.web.steps.BaseSteps;
 import ru.motiw.web.steps.Documents.Resolution.ResolutionSteps;
 import ru.motiw.web.steps.Tasks.TaskForm.UnionMessageSteps;
 
+import static com.codeborne.selenide.Condition.exist;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 import static org.testng.AssertJUnit.fail;
@@ -102,7 +103,7 @@ public class EditDocumentSteps extends BaseSteps {
         resolutionsTab();
         // Открываем форму создания резолюции
         sleep(3000);
-        editDocumentResolutionsTabElements.getButtonCreateResolution().waitUntil(visible, 5000).click();
+        editDocumentResolutionsTabElements.getButtonCreateResolution().waitUntil(visible, 5000).doubleClick(); // почему-то только со второго клика срабатывает
         switchTo().frame($(By.cssSelector("#resolution_window")));
         createResolutionFormElements.getElementResolutionFormBody().waitUntil(visible, 10000);
         // Редактирование резолюции

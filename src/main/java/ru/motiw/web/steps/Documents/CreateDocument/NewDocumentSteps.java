@@ -198,6 +198,8 @@ public class NewDocumentSteps extends BaseSteps {
             try {
                 $(By.xpath
                         ("//input[contains(@id,'ext-comp')][ancestor::div[contains(@style,'visibility: visible')]]")).shouldBe(visible);
+                newDocumentCartTabElements.getInputField().setValue(""); // todo setValue(valueLine) не всегда заполняет с первого раза и приходится сначала заполнять пустым значением и кликать повторно
+                $(By.xpath("//table//tr/td[1]/div[contains(text(),'" + nameField + "')]")).click();
                 newDocumentCartTabElements.getInputField().setValue(valueLine);
             } catch (ElementNotFound e) {
                 newDocumentCartTabElements.getInput2Field().setValue(valueLine);

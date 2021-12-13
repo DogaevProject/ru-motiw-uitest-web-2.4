@@ -281,7 +281,8 @@ public class UnionMessageNewSteps extends BaseSteps {
             switchTo().frame($(By.cssSelector("#flow")));
             insetDescriptionTaskFormElements.getButtonSaveDescription().click();
             insetPlanningTaskFormElements.getCheckpointNameField().click();
-            clearTextInInputViaHotKeys(insetDescriptionTaskFormElements.getEditorField());
+            insetDescriptionTaskFormElements.getEditorField().clear();
+            insetPlanningTaskFormElements.getCheckpointNameField().click();
             insetDescriptionTaskFormElements.getEditorField().setValue(checkpoint.getName()).pressEnter(); // Заполняем Название КТ
             if (checkpoint.getIsReady()) {
                 insetPlanningTaskFormElements.getCheckboxReadyFirst().click();
