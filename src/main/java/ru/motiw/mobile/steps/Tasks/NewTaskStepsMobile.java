@@ -427,7 +427,7 @@ public class NewTaskStepsMobile extends CardTaskStepsMobile {
         //Ждем появление маски загрузки
         loginPageElementsMobile.getMaskOfLoading().waitUntil(Condition.visible, 1000);
         //Ждем пока исчезнит маска загрузки
-        loginPageElementsMobile.getMaskOfLoading().waitUntil(Condition.disappear, 10000);
+        loginPageElementsMobile.getMaskOfLoading().waitUntil(Condition.disappear, 30000);
         // Иногда после первого нажатия на операцию сохранения происходит "ошибка при создании задачи" - пробуем выполнить операцию еще раз
         try {
             verifyThatToastOfNewTaskAppear();

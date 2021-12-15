@@ -2,6 +2,7 @@ package ru.motiw.mobile.steps.Document;
 
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ex.ElementNotFound;
+import com.codeborne.selenide.ex.UIAssertionError;
 import org.openqa.selenium.By;
 import ru.motiw.mobile.elements.Documents.DocumentElementsMobile;
 import ru.motiw.mobile.elements.Internal.FilesPreviewElementsMobile;
@@ -75,8 +76,12 @@ public class ResolutionStepsMobile extends DocumentStepsMobile {
                 waitToolbarOfMenu();
             }
         }
-
-        getElementOfOperation(getNameOfOperation(TypeOperationsOfDocument.CREATE_RESOLUTION), getCurrentLocation()).click();
+        try {
+            getElementOfOperation(getNameOfOperation(TypeOperationsOfDocument.CREATE_RESOLUTION), getCurrentLocation()).click();
+        } catch (UIAssertionError e) {
+            refresh();
+            getElementOfOperation(getNameOfOperation(TypeOperationsOfDocument.CREATE_RESOLUTION), getCurrentLocation()).click();
+        }
         documentElementsMobile.getFormOfResolution().waitUntil(visible, 500);
 
         // Заполнение полей раб.группа

@@ -2,6 +2,8 @@ package ru.motiw.testsWeb.Tasks;
 
 import com.codeborne.selenide.testng.TextReport;
 import com.codeborne.selenide.testng.annotations.Report;
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -18,8 +20,10 @@ import ru.motiw.web.steps.Tasks.TaskForm.UnionMessageSteps;
 import ru.motiw.web.steps.Tasks.UnionTasksSteps;
 
 import static com.codeborne.selenide.Selenide.page;
+import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.testng.AssertJUnit.assertTrue;
+import static ru.motiw.utils.WindowsUtil.newWindowForm;
 import static ru.motiw.web.steps.Administration.Users.DepartmentSteps.goToURLDepartments;
 import static ru.motiw.web.steps.Tasks.TaskForm.UnionMessageNewSteps.goToURLUnionMessageNew;
 import static ru.motiw.web.steps.Tasks.UnionTasksSteps.goToUnionTasks;
@@ -87,6 +91,7 @@ public class CreateTaskTest extends Tasks {
                 // Исполнители задачи
                 .createUser(worker[0].setDepartment(department));
         //TODO Создание задачи по типу отличном от типа Обычный
+
         // Инициализация и переход на страницу - Задачи/Создать задачу
         goToURLUnionMessageNew().creatingTask(task).saveTask();
 
@@ -97,13 +102,46 @@ public class CreateTaskTest extends Tasks {
         goToUnionTasks();
         unionTasksSteps.openAnExistingTaskInFolder(task, folder[0]);
 
-        unionMessageSteps.verifyCreateTask(task);
+        unionMessageSteps.verifyTask(task);
 
         // Выход
         internalPageSteps.logout();
         // Проверка - пользователь разлогинен
         assertTrue(loginPageSteps.isNotLoggedIn());
     }
+
+    /**
+     * Проверка редактирования обычной задачи
+     *
+     * @param task   атрибуты - значения задачи
+     */
+    @Test(priority = 2, dataProvider = "objectDataTask_2", dataProviderClass = Tasks.class)
+    public void verifyEditTask(Task task, Task editTask) {
+        loginPageSteps.loginAs(ADMIN);
+        assertThat("Check that the displayed menu item 8 (Logo; Tasks; Documents; Messages; Calendar; Library; Tools; Details)",
+                internalPageSteps.hasMenuUserComplete()); // Проверяем отображение п.м. на внутренней странице
+        // Инициализация и переход на страницу - Задачи/Создать задачу
+        goToURLUnionMessageNew().creationOfATaskCheckpoints(task);
+
+        goToUnionTasks();
+        unionTasksSteps.openAnExistingTaskInFolder(task, folder[0]);
+
+        String parentWindowHandler = getWebDriver().getWindowHandle();
+        getWebDriver().switchTo().window(new WebDriverWait(getWebDriver(), 10).until(newWindowForm(By.xpath("//body[@id='unionmessage']//li//span[text()='Действия']"))));
+        unionMessageSteps.verifyEditTask(editTask).clickSaveTask();
+        getWebDriver().close();
+        getWebDriver().switchTo().window(parentWindowHandler);  // Switch back to parent window
+
+        goToUnionTasks();
+        unionTasksSteps.openAnExistingTaskInFolder(editTask, folder[0]);
+        unionMessageSteps.verifyTask(editTask);
+
+        // Выход
+        internalPageSteps.logout();
+        // Проверка - пользователь разлогинен
+        assertTrue(loginPageSteps.isNotLoggedIn());
+    }
+
 
     /**
      * Проверяем создание задачи типа ИРГ
@@ -118,7 +156,7 @@ public class CreateTaskTest extends Tasks {
      * @param IWGController         Контролеры задачи
      * @param task                  Задача со всеми её параметрами
      */
-    @Test(priority = 2, dataProvider = "objectDataTask")
+    @Test(priority = 3, dataProvider = "objectDataTask")
     public void verifyCreateIWGTask(Department department, Employee[] author, Employee[] responsibleLeaders, Employee[] controller, Employee[] worker,
                                     Employee[] IWGWorker, Employee[] IWGResponsibleLeaders, Employee[] IWGController, Task task) {
         loginPageSteps.loginAs(ADMIN);
@@ -148,7 +186,7 @@ public class CreateTaskTest extends Tasks {
         goToUnionTasks();
         unionTasksSteps.openAnExistingTaskInFolder(task, folder[0]);
 
-        unionMessageSteps.verifyCreateTask(task);
+        unionMessageSteps.verifyTask(task);
 
         // Выход
         internalPageSteps.logout();
@@ -156,7 +194,7 @@ public class CreateTaskTest extends Tasks {
         assertTrue(loginPageSteps.isNotLoggedIn());
     }
 
-    @Test(priority = 3, dataProvider = "objectDataTask")
+    @Test(priority = 4, dataProvider = "objectDataTask")
     public void checkTheCreationOfATaskCheckpoints(Department department, Employee[] author, Employee[] resppers, Employee[] controller, Employee[] worker,
                                                    Employee[] IWGWorker, Employee[] IWGResppers, Employee[] IWGСontroller, Task task) {
         loginPageSteps.loginAs(ADMIN);
@@ -174,7 +212,7 @@ public class CreateTaskTest extends Tasks {
         goToUnionTasks();
         unionTasksSteps.openExistingTaskInTheFolderThroughTheSearch(task, folder[0]);
 
-        unionMessageSteps.verifyCreateTask(task);
+        unionMessageSteps.verifyTask(task);
 
         // Выход
         internalPageSteps.logout();

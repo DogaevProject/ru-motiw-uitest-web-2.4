@@ -14,9 +14,11 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.clearBrowserCache;
+import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static org.testng.Assert.fail;
 
 
@@ -39,6 +41,7 @@ public abstract class BaseTest {
         Configuration.savePageSource = false;
         Configuration.fileDownload = Configuration.FileDownloadMode.PROXY;
         open("/");
+        getWebDriver().manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
     }
 
     /**

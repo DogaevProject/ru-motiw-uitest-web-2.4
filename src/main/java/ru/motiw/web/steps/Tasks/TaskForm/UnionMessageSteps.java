@@ -19,6 +19,13 @@ public class UnionMessageSteps extends UnionMessageNewSteps {
 
     private UnionMessageElements unionMessageElements = page(UnionMessageElements.class);
 
+    private UnionMessageSteps verifyTaskName(String taskName) {
+        insetDescriptionTaskFormElements.getPlanningDescription().click();
+        insetDescriptionTaskFormElements.getClickTaskName().waitUntil(Condition.visible, 5000).click();
+        insetDescriptionTaskFormElements.getEditorField().shouldHave(Condition.value(taskName));
+        return this;
+    }
+
     public UnionMessageSteps verifyEnd(String end) {
         // TODO Auto-generated method stub
         return this;
@@ -105,12 +112,12 @@ public class UnionMessageSteps extends UnionMessageNewSteps {
     }
 
     /**
-     * Проверяем создание задачи
+     * Проверяем созданую задачу
      *
      * @param valueTask атрибуты задачи
      * @return UnionMessageSteps
      */
-    public UnionMessageSteps verifyCreateTask(Task valueTask) {
+    public UnionMessageSteps verifyTask(Task valueTask) {
         /*
          Window PopUp. Store your parent window
          */
@@ -120,7 +127,8 @@ public class UnionMessageSteps extends UnionMessageNewSteps {
         if (valueTask == null) {
             return null;
         } else
-            verifyEnd(valueTask.getDateEnd())
+            verifyTaskName(valueTask.getTaskName())
+                    .verifyEnd(valueTask.getDateEnd())
                     .verifyProject(valueTask.getProject())
                     .verifyTaskDescription(valueTask.getDescription())
                     .verifyBegin(valueTask.getDateBegin())
@@ -156,7 +164,7 @@ public class UnionMessageSteps extends UnionMessageNewSteps {
         } else {
             checkDisplayedTabsInTheShapeOfAnObject(By.xpath("//span[text()][ancestor::em[contains(@class,'x-tab')]][ancestor::li[not(@style='display: none;')]]"), 10,
                     By.xpath("//span[text()][ancestor::em[contains(@class,'x-tab')]][ancestor::li[not(@style='display: none;')]]"),
-                    new String[]{"\u00A0","Действия", "Описание", "Файлы", "Планирование", "События", "Контакты", "Журнал", "Связь", "\u00A0"});
+                    new String[]{"\u00A0", "Действия", "Описание", "Файлы", "Планирование", "События", "Контакты", "Журнал", "Связь", "\u00A0"});
         }
         return this;
     }
@@ -177,6 +185,24 @@ public class UnionMessageSteps extends UnionMessageNewSteps {
         unionMessageElements.getButtonConsiderationWithComment().shouldBe(Condition.visible);
         unionMessageElements.getButtonDenialReview().shouldBe(Condition.visible);
         unionMessageElements.getButtonBackToRevision().shouldBe(Condition.visible);
+        return this;
+    }
+
+
+    /**
+     * Редактирование задачи
+     *
+     * @param task атрибуты задачи
+     */
+    public UnionMessageSteps verifyEditTask(Task task) {
+        if (task == null) {
+            return null;
+        } else
+            insetDescriptionTaskFormElements.getPlanningDescription().click();
+        if (task.getTaskName() != null) {
+            setTaskName(task.getTaskName());
+        }
+        // todo остальные поля
         return this;
     }
 

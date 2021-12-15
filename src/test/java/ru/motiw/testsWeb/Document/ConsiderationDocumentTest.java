@@ -82,8 +82,8 @@ public class ConsiderationDocumentTest extends ConsiderationDocflow {
 
 
     @Test(dataProvider = "objectDataRCD", dataProviderClass = ConsiderationDocflow.class)
-    public void preconditionInWeb(Department[] departments, Employee[] employee, TasksTypes tasksTypes,
-                                  DocRegisterCards registerCards, Document document, Folder[] folders) throws Exception {
+    public void precondition(Department[] departments, Employee[] employee, TasksTypes tasksTypes,
+                             DocRegisterCards registerCards, Document document, Folder[] folders) throws Exception {
         loginPageSteps.loginAs(ADMIN);
         //---------------------------------------------------------------------------------Пользователи и Подразделения
         // Инициализируем страницу и переходим на нее - Администрирование/Пользователи (Подразделения)
@@ -158,7 +158,7 @@ public class ConsiderationDocumentTest extends ConsiderationDocflow {
     }
 
 
-    @Test(dataProvider = "objectDataForConsideration", dataProviderClass = ConsiderationDocflow.class, dependsOnMethods = "preconditionInWeb")
+    @Test(dataProvider = "objectDataForConsideration", dataProviderClass = ConsiderationDocflow.class, dependsOnMethods = "precondition")
     public void verifyConsideration_1(Employee[] employee, Document document, Task task, Folder[] folders) {
         loginPageSteps.loginAs(employee[0]);
         goToUnionTasks();
@@ -176,8 +176,7 @@ public class ConsiderationDocumentTest extends ConsiderationDocflow {
         editDocumentSteps.verifyButtonsOfConsiderationIsVisible();
 
         // выполнение операции
-        sleep(2000); // todo только после ожидания срабатыает клик, что конкретно ждать не ясно
-        editDocumentCartTabElements.getButtonConsideration().click();
+        editDocumentSteps.clickButtonConsideration();
         editDocumentSteps.addTextBeforeConsiderationAndOk("Согласовать");
 
         getWebDriver().switchTo().window(parentWindowHandler);  // окно задачи закрывается
@@ -214,8 +213,7 @@ public class ConsiderationDocumentTest extends ConsiderationDocflow {
         editDocumentSteps.verifyButtonsOfConsiderationIsVisible();
 
         // выполнение операции
-        sleep(2000); // todo только после ожидания срабатыает клик, что конкретно ждать не ясно
-        editDocumentCartTabElements.getButtonBackToRevision().click();
+        editDocumentSteps.clickButtonBackToRevision();
         editDocumentSteps.addTextBeforeConsiderationAndOk("На доработку");
 
         getWebDriver().switchTo().window(parentWindowHandler);  // окно задачи закрывается
@@ -274,8 +272,7 @@ public class ConsiderationDocumentTest extends ConsiderationDocflow {
         editDocumentSteps.verifyButtonsOfConsiderationIsVisible();
 
         // выполнение операции
-        sleep(2000); // todo только после ожидания срабатыает клик, что конкретно ждать не ясно
-        editDocumentCartTabElements.getButtonConsiderationWithComment().click();
+        editDocumentSteps.clickButtonConsiderationWithComment();
         editDocumentSteps.addTextBeforeConsiderationAndOk("Согласовать с замечаниями");
 
         getWebDriver().switchTo().window(parentWindowHandler);  // окно задачи закрывается
@@ -310,8 +307,7 @@ public class ConsiderationDocumentTest extends ConsiderationDocflow {
         editDocumentSteps.verifyButtonsOfConsiderationIsVisible();
 
         // выполнение операции
-        sleep(2000); // todo только после ожидания срабатыает клик, что конкретно ждать не ясно
-        editDocumentCartTabElements.getButtonDenialReview().click();
+        editDocumentSteps.clickButtonDenialReview();
         editDocumentSteps.addTextBeforeConsiderationAndOk("Отказаться согласовать");
 
         getWebDriver().switchTo().window(parentWindowHandler);  // окно задачи закрывается

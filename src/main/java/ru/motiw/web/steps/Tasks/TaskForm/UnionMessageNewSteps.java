@@ -2,6 +2,7 @@ package ru.motiw.web.steps.Tasks.TaskForm;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.ex.UIAssertionError;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -17,8 +18,7 @@ import ru.motiw.web.steps.BaseSteps;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static ru.motiw.utils.WindowsUtil.newWindowForm;
@@ -30,7 +30,7 @@ import static ru.motiw.web.model.URLMenu.CREATE_TASK;
 public class UnionMessageNewSteps extends BaseSteps {
 
     private ProjectFormElements projectFormElements = page(ProjectFormElements.class);
-    private InsetDescriptionTaskFormElements insetDescriptionTaskFormElements = page(InsetDescriptionTaskFormElements.class);
+    protected InsetDescriptionTaskFormElements insetDescriptionTaskFormElements = page(InsetDescriptionTaskFormElements.class);
     private IWGFormElements iwgFormElements = page(IWGFormElements.class);
     private UsersSelectTheFormElements usersSelectTheFormElements = page(UsersSelectTheFormElements.class);
     private InsetPlanningTaskFormElements insetPlanningTaskFormElements = page(InsetPlanningTaskFormElements.class);
@@ -121,16 +121,24 @@ public class UnionMessageNewSteps extends BaseSteps {
      *
      * @param taskName строковый параметр для передачи Названия задачи
      */
-    private UnionMessageNewSteps setTaskName(String taskName) {
+    UnionMessageNewSteps setTaskName(String taskName) {
         insetDescriptionTaskFormElements.getClickTaskName().click();
+        try {
         insetDescriptionTaskFormElements.getEditorField().setValue(taskName);
+        } catch (UIAssertionError e) {
+            // при редактировании поля после первого клика getEditorField() не открывается
+            insetDescriptionTaskFormElements.getClickTaskName().click();
+            insetDescriptionTaskFormElements.getEditorField().setValue(taskName);
+            insetDescriptionTaskFormElements.getBeginField().click(); // снимаем фокус с Названия задачи
+            insetDescriptionTaskFormElements.getClickTaskName().click();
+        }
         return this;
     }
 
     /**
      * Клик сохранить задачу - Ожидание маски
      */
-    private UnionMessageNewSteps clickSaveTask() {
+    public UnionMessageNewSteps clickSaveTask() {
         insetDescriptionTaskFormElements.getPlanningDescription().click();
         insetDescriptionTaskFormElements.getButtonCreateTask().click();
         waitForTaskMask();
@@ -370,7 +378,7 @@ public class UnionMessageNewSteps extends BaseSteps {
             for (IWG anIwg : iwg) {
                 insetDescriptionTaskFormElements.getButtonAddIWG().click(); // Добавить ИРГ
                 getFrameObject($(By.xpath("//iframe[contains(@src,'/user/editiwg')]"))); // переходим во Фрейм формы добавления - ИРГ
-               sleep(2000);
+                sleep(2000);
                 $(iwgFormElements.getButtonIwgSave()).shouldBe(Condition.visible);
                 iwgFormElements.getInputIwgName().setValue(anIwg.getNameIWG()); // Название ИРГ
                 iwgFormElements.getInputIwgTaskType().click();

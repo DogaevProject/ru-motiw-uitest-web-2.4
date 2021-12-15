@@ -155,7 +155,7 @@ public abstract class BaseSteps {
      */
     public static boolean isElementPresent(By locator) {
         try {
-            sleep(300);
+            sleep(1000);
             getWebDriver().findElement(locator);
             return true;
         } catch (NoSuchElementException ignored) {
@@ -211,9 +211,15 @@ public abstract class BaseSteps {
      */
     public static void openSectionOnURL(String URL) {
         switchTo().defaultContent();
-        open(URL);
-        assertEquals(baseUrl + URL, getWebDriver().getCurrentUrl());
-        switchTo().frame($(By.cssSelector("#flow")));
+        try {
+            open(URL);
+            assertEquals(baseUrl + URL, getWebDriver().getCurrentUrl());
+            switchTo().frame($(By.cssSelector("#flow")));
+        } catch (NoSuchFrameException | TimeoutException e) {
+            // иногда зависает при открытии разделов
+            refresh();
+            switchTo().frame($(By.cssSelector("#flow")));
+        }
     }
 
     /**
@@ -236,7 +242,6 @@ public abstract class BaseSteps {
 
     /**
      * Очищаем поле через Ctrl+a+BACK_SPACE
-     *
      */
     public void clearTextInInputViaHotKeys(SelenideElement element) {
         element.sendKeys(Keys.chord(Keys.CONTROL, "a"));

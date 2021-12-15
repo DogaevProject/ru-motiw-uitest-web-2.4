@@ -3,8 +3,7 @@ package ru.motiw.web.steps.Administration.Users;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.ex.UIAssertionError;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
+import org.openqa.selenium.*;
 import org.testng.AssertJUnit;
 import ru.motiw.web.elements.elementsweb.Administration.Users.DepartmentElements;
 import ru.motiw.web.elements.elementsweb.Administration.Users.UsersElements;
@@ -386,7 +385,7 @@ public class UsersSteps extends DepartmentSteps {
             usersElements.getButtonAddUser().click(); // Добавить пользователя
             switchTo().frame($(By.xpath("//iframe[contains(@id,'component-')]")));
             usersElements.getLastName().waitUntil(visible, 10000);
-        } catch (UIAssertionError e) {
+        } catch (UIAssertionError | NotFoundException e) {
             // Обработка случая зависания открытия формы
             goToURLDepartments();
             //выполняем действия повторно

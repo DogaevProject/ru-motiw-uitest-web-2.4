@@ -18,9 +18,8 @@ import static ru.motiw.data.dataproviders.Administration.getRandomEmployer;
 public abstract class Tasks extends BaseTest {
 
 
-
     // Инициализация объекта - Названия Файлов задачи
-    String[] filename = new String[] {
+    String[] filename = new String[]{
             FilesForAttachment.FILE_1.getNameFile(),
             FilesForAttachment.FILE_2.getNameFile(),
             FilesForAttachment.FILE_3.getNameFile(),
@@ -40,11 +39,11 @@ public abstract class Tasks extends BaseTest {
 
         return new Task()
                 //Добавляем текстовые действия задачи
-                .setActions(new Action[] {
+                .setActions(new Action[]{
                         actions[0]
-                                .setActionText("Действие №1" + " " + randomString(10) ),
+                                .setActionText("Действие №1" + " " + randomString(10)),
                         actions[1]
-                                .setActionText("Действие №2" + " " + randomString(10) )
+                                .setActionText("Действие №2" + " " + randomString(10))
                 })
                 .setTaskName(randomString(15) + " " + randomString(30))
                 .setDescription(randomString(100))  // для Описания АРМа пока в одну строку
@@ -56,12 +55,11 @@ public abstract class Tasks extends BaseTest {
                 .setExecutiveManagers(null)
                 .setWorkers(null)
                 .setTaskType(new TasksTypes("Обычный"))
-                .setFileName(new String[ ]{filename[0], filename[1]}) // Файлы - взаимодействуем только с названиями файлов
+                .setFileName(new String[]{filename[0], filename[1]}) // Файлы - взаимодействуем только с названиями файлов
                 .setIsSecret(true) // Секретная задача
                 .setIsWithReport(false) // C докладом
                 .setIsForReview(true); // Только для озакомления
     }
-
 
 
     /**
@@ -81,12 +79,10 @@ public abstract class Tasks extends BaseTest {
      */
     public static Action getRandomAction() {
         return new Action()
-                        .setActionText(randomString(10) )
-                        .setAuthorAction(EMPLOYEE_ADMIN)
-                        .setTimeOfAddAction(nowHourTime());
+                .setActionText(randomString(10))
+                .setAuthorAction(EMPLOYEE_ADMIN)
+                .setTimeOfAddAction(nowHourTime());
     }
-
-
 
 
     /**
@@ -112,7 +108,7 @@ public abstract class Tasks extends BaseTest {
                         .setIsSecret(true) // Секретная задача
                         .setIsWithReport(true) // C докладом
                         .setIsForReview(true) // Только для озакомления
-                        .setFileName(new String[] {filename[2]}) // Файл
+                        .setFileName(new String[]{filename[2]}) // Файл
                         .setIsImportant(true)}, // Важная задача
         };
     }
@@ -248,6 +244,26 @@ public abstract class Tasks extends BaseTest {
 
 
     /**
+     * Параметризация - Инициализируем модель - Задача для проверки создания и для редактирования
+     */
+    @DataProvider
+    public Object[][] objectDataTask_2() {
+
+
+        //-----------Инициализация объекта - Задача (с атрибутами)
+        Task task = getRandomTask();
+        Task editTask = getRandomTask();
+        return new Object[][]{
+
+                {
+                        task,
+                        editTask
+                }
+        };
+    }
+
+
+    /**
      * Метод создания полностью случайного объект - "Папка"
      *
      * @return folder c атрибутами полей объекта - Папка
@@ -296,26 +312,24 @@ public abstract class Tasks extends BaseTest {
     }
 
 
-
     /**
      * Параметризация - Инициализируем модель - ШАБЛОН ЗАДАЧ
      */
     @DataProvider
     public Object[][] objectDataTemplateOfTask() {
 
-        TemplateOfTask[] template = new TemplateOfTask[] {
+        TemplateOfTask[] template = new TemplateOfTask[]{
                 getRandomTemplateOfTask(),
                 getRandomTemplateOfTask()
         };
 
-        return new Object[][] {
+        return new Object[][]{
 
                 {
                         template
                 }
         };
     }
-
 
 
 }

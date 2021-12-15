@@ -1,6 +1,7 @@
 package ru.motiw.web.steps.Documents.EditDocument;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import ru.motiw.web.elements.elementsweb.Documents.CreateDocument.NewDocumentRouteTabElements;
 import ru.motiw.web.elements.elementsweb.Documents.EditDocument.EditDocumentCartTabElements;
@@ -128,8 +129,10 @@ public class EditDocumentSteps extends BaseSteps {
         getFrameObject($(By.xpath("//*[@class='cke_wysiwyg_frame cke_reset']"))); // Фрейм CKE (расширенный текстовый редактор)
         editDocumentCartTabElements.getCkeBody().setValue(text);
         switchTo().defaultContent();
-        //switchTo().frame($(By.cssSelector("#flow")));
-        editDocumentCartTabElements.getButtonOkInFormForAddTextBeforeConsideration().click();
+        while (editDocumentCartTabElements.getButtonOkInFormForAddTextBeforeConsideration().is(visible)) {
+            // с первого раза не всегда клик срабатывает
+            editDocumentCartTabElements.getButtonOkInFormForAddTextBeforeConsideration().click();
+        }
         sleep(500);
         waitForMask();
         return this;
@@ -146,9 +149,49 @@ public class EditDocumentSteps extends BaseSteps {
         return this;
     }
 
+    /**
+     * Несколько попыток открыть форму для ввода текста перед согласованием, с первого клика не открывается и что конкретно ожидать непонятно
+     *
+     * @param element
+     */
+    private void clickUntilFormForTextAppear(SelenideElement element) {
+        while (!($(By.xpath("//*[@class='cke_wysiwyg_frame cke_reset']")).is(exist))) {
+            element.click();
+            sleep(1000);
+        }
+    }
 
+    /**
+     * Открыть форму для ввода текста по кнопке "Согласовать"
+     */
+    public EditDocumentSteps clickButtonConsideration() {
+        clickUntilFormForTextAppear(editDocumentCartTabElements.getButtonConsideration());
+        return this;
+    }
 
+    /**
+     * Открыть форму для ввода текста по кнопке "Согласовать с замечаниями"
+     */
+    public EditDocumentSteps clickButtonConsiderationWithComment() {
+        clickUntilFormForTextAppear(editDocumentCartTabElements.getButtonConsiderationWithComment());
+        return this;
+    }
 
+    /**
+     * Открыть форму для ввода текста по кнопке  "Отказаться согласовать"
+     */
+    public EditDocumentSteps clickButtonDenialReview() {
+        clickUntilFormForTextAppear(editDocumentCartTabElements.getButtonDenialReview());
+        return this;
+    }
+
+    /**
+     * Открыть форму для ввода текста по кнопке "На доработку"
+     */
+    public EditDocumentSteps clickButtonBackToRevision() {
+        clickUntilFormForTextAppear(editDocumentCartTabElements.getButtonBackToRevision());
+        return this;
+    }
 
 }
 

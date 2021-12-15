@@ -107,7 +107,7 @@ public class UnionTasksSteps extends BaseSteps {
             $$(By.xpath("//a[contains(@href,'/user/unionmessage') and text()='" + task.getTaskName() + "']"))
                     .first().shouldBe(visible);
         } catch (UIAssertionError e) {
-            refresh();
+            goToUnionTasks();
             waitMaskForGridTask();
             ensurePageLoaded();
             $(By.xpath("//span[contains(@class,'x-tree-node-text ')]/b[contains(text(),'" + parseNameFolder(folder.getNameFolder())[0] + "')]")).click();
@@ -284,7 +284,7 @@ public class UnionTasksSteps extends BaseSteps {
         try {
             while (isElementPresent(nodes)) {
                 if (isElementPresent(nodes)) {
-                    knot.click();
+                    knot.waitUntil(visible, 10000).click();
                 }
             }
         } catch (NoSuchElementException n) {

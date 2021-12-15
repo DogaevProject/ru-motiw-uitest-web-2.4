@@ -52,7 +52,17 @@ public class LoginStepsMobile extends BaseSteps {
             loginPageElementsMobile.getLogin().waitUntil(Condition.visible, 20000);
         }
 
-        setLoginField(user.getLoginName());
+        try {
+            setLoginField(user.getLoginName());
+        } catch (UIAssertionError e) {
+            // если после предыдущего упавшего теста не перешли на страницу авторизации
+            clearBrowserCache();
+            open(Configuration.baseUrl);
+            //Переход в мобильную версию по ссылке в форме авторизации полной версии
+            loginPageElementsMobile.getLinkToMobile().click();
+            loginPageElementsMobile.getLogin().waitUntil(Condition.visible, 20000);
+            setLoginField(user.getLoginName());
+        }
         setPasswordField(user.getPassword());
         loginPageElementsMobile.getLogon().click();
         return this;
@@ -70,9 +80,13 @@ public class LoginStepsMobile extends BaseSteps {
             // Ожидание кнопки Главного Меню
             internalElementsMobile.getButtonMainMenu().waitUntil(Condition.visible, 10000);
         } catch (UIAssertionError e) {
-            clearBrowserCache();
-            open(Configuration.baseUrl);
-            loginAs(employee);
+            if (internalElementsMobile.getButtonGoHome().isDisplayed()) {
+                internalElementsMobile.getButtonGoHome().click();
+            } else {
+                clearBrowserCache();
+                open(Configuration.baseUrl);
+                loginAs(employee);
+            }
             // Ожидание кнопки Главного Меню
             internalElementsMobile.getButtonMainMenu().waitUntil(Condition.visible, 10000);
         }
