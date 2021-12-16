@@ -2,6 +2,7 @@ package ru.motiw.web.steps.Tasks.TaskForm;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.ex.ElementNotFound;
 import com.codeborne.selenide.ex.UIAssertionError;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -124,7 +125,7 @@ public class UnionMessageNewSteps extends BaseSteps {
     UnionMessageNewSteps setTaskName(String taskName) {
         insetDescriptionTaskFormElements.getClickTaskName().click();
         try {
-        insetDescriptionTaskFormElements.getEditorField().setValue(taskName);
+            insetDescriptionTaskFormElements.getEditorField().setValue(taskName);
         } catch (UIAssertionError e) {
             // при редактировании поля после первого клика getEditorField() не открывается
             insetDescriptionTaskFormElements.getClickTaskName().click();
@@ -291,7 +292,12 @@ public class UnionMessageNewSteps extends BaseSteps {
             insetPlanningTaskFormElements.getCheckpointNameField().click();
             insetDescriptionTaskFormElements.getEditorField().clear();
             insetPlanningTaskFormElements.getCheckpointNameField().click();
-            insetDescriptionTaskFormElements.getEditorField().setValue(checkpoint.getName()).pressEnter(); // Заполняем Название КТ
+            try {
+                insetDescriptionTaskFormElements.getEditorField().setValue(checkpoint.getName()).pressEnter(); // Заполняем Название КТ
+            } catch (ElementNotFound e) {
+                insetPlanningTaskFormElements.getCheckpointNameField().click();
+                insetDescriptionTaskFormElements.getEditorField().setValue(checkpoint.getName()).pressEnter(); // Заполняем Название КТ
+            }
             if (checkpoint.getIsReady()) {
                 insetPlanningTaskFormElements.getCheckboxReadyFirst().click();
             }

@@ -2,7 +2,12 @@ package ru.motiw.web.steps.Documents.EditDocument;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.ex.ElementNotFound;
+import com.codeborne.selenide.ex.UIAssertionError;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchFrameException;
+import ru.motiw.mobile.steps.CardStepsMobile;
+import ru.motiw.web.elements.elementsweb.Documents.CreateDocument.NewDocumentCartTabElements;
 import ru.motiw.web.elements.elementsweb.Documents.CreateDocument.NewDocumentRouteTabElements;
 import ru.motiw.web.elements.elementsweb.Documents.EditDocument.EditDocumentCartTabElements;
 import ru.motiw.web.elements.elementsweb.Documents.EditDocument.EditDocumentResolutionsTabElements;
@@ -29,6 +34,7 @@ public class EditDocumentSteps extends BaseSteps {
     private ResolutionSteps resolutionSteps = page(ResolutionSteps.class);
     private NewDocumentRouteTabElements routeTableGridElements = page(NewDocumentRouteTabElements.class);
     private EditDocumentCartTabElements editDocumentCartTabElements = page(EditDocumentCartTabElements.class);
+    private NewDocumentCartTabElements newDocumentCartTabElements = page(NewDocumentCartTabElements.class);
 
 
     /**
@@ -105,7 +111,12 @@ public class EditDocumentSteps extends BaseSteps {
         // Открываем форму создания резолюции
         sleep(3000);
         editDocumentResolutionsTabElements.getButtonCreateResolution().waitUntil(visible, 5000).doubleClick(); // почему-то только со второго клика срабатывает
-        switchTo().frame($(By.cssSelector("#resolution_window")));
+        try {
+            switchTo().frame($(By.cssSelector("#resolution_window")));
+        } catch (ElementNotFound | NoSuchFrameException e) {
+            editDocumentResolutionsTabElements.getButtonCreateResolution().doubleClick();
+            switchTo().frame($(By.cssSelector("#resolution_window")));
+        }
         createResolutionFormElements.getElementResolutionFormBody().waitUntil(visible, 10000);
         // Редактирование резолюции
         resolutionSteps.addTextOfResolution(resolution.getTextOfResolution());
@@ -190,6 +201,19 @@ public class EditDocumentSteps extends BaseSteps {
      */
     public EditDocumentSteps clickButtonBackToRevision() {
         clickUntilFormForTextAppear(editDocumentCartTabElements.getButtonBackToRevision());
+        return this;
+    }
+
+    /**
+     * Ожидание открытия Формы документа
+     */
+    public EditDocumentSteps waitDocument() {
+        try {
+            newDocumentCartTabElements.getFieldRegistrationDate().waitUntil(visible, 20000);
+        } catch (UIAssertionError elementNotFound) {
+            refresh();
+            newDocumentCartTabElements.getFieldRegistrationDate().waitUntil(visible, 20000);
+        }
         return this;
     }
 

@@ -23,6 +23,7 @@ import ru.motiw.web.steps.DocflowAdministration.DocumentRegistrationCards.FormDo
 import ru.motiw.web.steps.DocflowAdministration.DocumentRegistrationCards.FormDocRegisterCardsEditGeneralSteps;
 import ru.motiw.web.steps.DocflowAdministration.DocumentRegistrationCards.GridDocRegisterCardsSteps;
 import ru.motiw.web.steps.Documents.CreateDocument.NewDocumentSteps;
+import ru.motiw.web.steps.Documents.EditDocument.EditDocumentSteps;
 import ru.motiw.web.steps.Home.InternalSteps;
 import ru.motiw.web.steps.Login.LoginStepsSteps;
 
@@ -48,6 +49,7 @@ public class CreateDocumentTest extends DocflowAdministration {
     private FormDocRegisterCardsEditConnectedRoutesSteps formDocRegisterCardsEditConnectedRoutesSteps;
     private FormDocRegisterCardsEditGeneralSteps formDocRegisterCardsEditGeneralSteps;
     private NewDocumentSteps newDocumentSteps;
+    private EditDocumentSteps editDocumentSteps;
     private EditDocumentCartTabElements editDocumentCartTabElements;
 
 
@@ -60,6 +62,7 @@ public class CreateDocumentTest extends DocflowAdministration {
         formDocRegisterCardsEditConnectedRoutesSteps = page(FormDocRegisterCardsEditConnectedRoutesSteps.class);
         formDocRegisterCardsEditGeneralSteps = page(FormDocRegisterCardsEditGeneralSteps.class);
         newDocumentSteps = page(NewDocumentSteps.class);
+        editDocumentSteps = page(EditDocumentSteps.class);
         editDocumentCartTabElements = page(EditDocumentCartTabElements.class);
     }
 
@@ -135,10 +138,12 @@ public class CreateDocumentTest extends DocflowAdministration {
     @Test(dataProvider = "objectDataEditDocument", dataProviderClass = DocflowAdministration.class, dependsOnMethods = "verificationDocumentCreation")
     public void verificationEditDocument(Document document) {
         open(urlDoc);
+        editDocumentSteps.waitDocument();
         // Редактирование документа
         newDocumentSteps.fillCustomFieldsDocument(document.getDocumentFields());
         editDocumentCartTabElements.geSaveButton().click();
         open(urlDoc);
+        editDocumentSteps.waitDocument();
         newDocumentSteps.verifyValueCustomFieldsDocument(document.getDocumentFields());
         // Выход из системы
         internalPageSteps.logout();

@@ -4,7 +4,7 @@ import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.ex.ElementNotFound;
 import com.codeborne.selenide.ex.UIAssertionError;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import ru.motiw.web.elements.elementsweb.Documents.CreateDocument.NewDocumentCartTabElements;
 import ru.motiw.web.elements.elementsweb.Documents.CreateDocument.NewDocumentRouteTabElements;
@@ -98,7 +98,7 @@ public class NewDocumentSteps extends BaseSteps {
                 newDocumentCartTabElements.getNewProject().click();
                 getFrameObject($(projectFormElements.getProjectFrame()));
                 projectFormElements.getProjectField().waitUntil(visible, 10000);
-            } catch (UIAssertionError e) {
+            } catch (UIAssertionError | NoSuchFrameException e) {
                 // Обработка зависания загрузки формы
                 try {
                     Robot r = new Robot(); //создаем робота для взаимодействия с формой

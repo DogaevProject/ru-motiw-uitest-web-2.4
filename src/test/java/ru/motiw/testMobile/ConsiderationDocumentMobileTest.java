@@ -249,11 +249,13 @@ public class ConsiderationDocumentMobileTest extends DocflowAdministrationMobile
                 internalPageSteps.hasMenuUserComplete()); // Проверяем отображение п.м. на внутренней странице
         // проверка статусов в мс
         open(urlDocInWeb_1);
+        editDocumentSteps.waitDocument();
         editDocumentSteps.routesTab();
         editDocumentRouteTabElements.statusBlockDiagramIsReviewed("Произвольная рабочая группа", employee[0].getLastName()).shouldBe(visible);
         editDocumentRouteTabElements.statusBlockDiagramIsBackToRevision("Произвольный начальник", employee[1].getLastName()).shouldBe(visible);
 
         open(urlDocInWeb_2);
+        editDocumentSteps.waitDocument();
         editDocumentSteps.routesTab();
         editDocumentRouteTabElements.statusBlockDiagramIsReviewedWithComment("Произвольная рабочая группа", employee[0].getLastName()).shouldBe(visible);
         editDocumentRouteTabElements.statusBlockDiagramIsDenialReview("Произвольный начальник", employee[1].getLastName()).shouldBe(visible);

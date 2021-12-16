@@ -135,6 +135,7 @@ public class ApproveResolutionMobileTest extends TestsOfResolutionsMobile {
         switchTo().window(tabs.get(1)); //переходим во вторую вкладку
         //Сохранить url для перехода по прямой ссылке
         urlDocInWeb = getWebDriver().getCurrentUrl();
+        editDocumentSteps.waitDocument();
         // Создание проекта
         editDocumentSteps.createProjectOfResolution(document.getResolutionOfDocument()[0]);
         getWebDriver().close();
@@ -186,6 +187,7 @@ public class ApproveResolutionMobileTest extends TestsOfResolutionsMobile {
         assertThat("Check that the displayed menu item 8 (Logo; Tasks; Documents; Messages; Calendar; Library; Tools; Details)",
                 internalPageSteps.hasMenuUserComplete()); // Проверяем отображение п.м. на внутренней странице
         open(urlDocInWeb);
+        editDocumentSteps.waitDocument();
         // Создание проекта
         editDocumentSteps.createProjectOfResolution(document.getResolutionOfDocument()[1]);
         refresh();
@@ -268,6 +270,7 @@ public class ApproveResolutionMobileTest extends TestsOfResolutionsMobile {
         assertThat("Check that the displayed menu item 8 (Logo; Tasks; Documents; Messages; Calendar; Library; Tools; Details)",
                 internalPageSteps.hasMenuUserComplete()); // Проверяем отображение п.м. на внутренней странице
         open(urlDocInWeb);
+        editDocumentSteps.waitDocument();
         editDocumentSteps.resolutionsTab();
         editDocumentSteps.statusOfResolutionIsOnExecution(document.getResolutionOfDocument()[0]);
         editDocumentSteps.statusOfResolutionIsOnExecution(document.getResolutionOfDocument()[1]);

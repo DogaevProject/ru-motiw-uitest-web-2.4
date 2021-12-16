@@ -78,7 +78,7 @@ public class ConsiderationDocumentTest extends ConsiderationDocflow {
         editDocumentRouteTabElements = page(EditDocumentRouteTabElements.class);
     }
 
-    private String urlDocInWeb_1;
+    private String urlDocInWeb;
 
 
     @Test(dataProvider = "objectDataRCD", dataProviderClass = ConsiderationDocflow.class)
@@ -147,7 +147,7 @@ public class ConsiderationDocumentTest extends ConsiderationDocflow {
         ArrayList<String> tabs = new ArrayList<>(getWebDriver().getWindowHandles()); //все открытые окна сохраняем в список
         switchTo().window(tabs.get(1)); //переходим во вторую вкладку
         //Сохранить url для перехода по прямой ссылке
-        urlDocInWeb_1 = getWebDriver().getCurrentUrl();
+        urlDocInWeb = getWebDriver().getCurrentUrl();
         getWebDriver().close();
         getWebDriver().switchTo().window(parentWindowHandler);
 
@@ -180,7 +180,8 @@ public class ConsiderationDocumentTest extends ConsiderationDocflow {
         editDocumentSteps.addTextBeforeConsiderationAndOk("Согласовать");
 
         getWebDriver().switchTo().window(parentWindowHandler);  // окно задачи закрывается
-        open(urlDocInWeb_1);
+        open(urlDocInWeb);
+        editDocumentSteps.waitDocument();
         editDocumentSteps.routesTab();
         editDocumentRouteTabElements.statusBlockDiagramIsReviewed("Произвольная рабочая группа", employee[0].getLastName()).shouldBe(visible);
         editDocumentSteps.verifyButtonsOfConsiderationIsNotVisible();
@@ -217,7 +218,8 @@ public class ConsiderationDocumentTest extends ConsiderationDocflow {
         editDocumentSteps.addTextBeforeConsiderationAndOk("На доработку");
 
         getWebDriver().switchTo().window(parentWindowHandler);  // окно задачи закрывается
-        open(urlDocInWeb_1);
+        open(urlDocInWeb);
+        editDocumentSteps.waitDocument();
         editDocumentSteps.routesTab();
         editDocumentRouteTabElements.statusBlockDiagramIsReviewed("Произвольная рабочая группа", employee[0].getLastName()).shouldBe(visible);
         editDocumentRouteTabElements.statusBlockDiagramIsBackToRevision("Произвольный начальник", employee[1].getLastName()).shouldBe(visible);
@@ -235,7 +237,8 @@ public class ConsiderationDocumentTest extends ConsiderationDocflow {
     @Test(dataProvider = "objectDataForConsideration", dataProviderClass = ConsiderationDocflow.class, dependsOnMethods = "verifyConsideration_2")
     public void verifyConsideration_3(Employee[] employee, Document document, Task task, Folder[] folders) {
         loginPageSteps.loginAs(ADMIN);
-        open(urlDocInWeb_1);
+        open(urlDocInWeb);
+        editDocumentSteps.waitDocument();
         // выполнение операции
         editDocumentCartTabElements.getButtonBackToConsideration().click();
         editDocumentCartTabElements.getButtonOkInFormForAddTextBeforeConsideration().waitUntil(visible, 1000).click();
@@ -276,7 +279,8 @@ public class ConsiderationDocumentTest extends ConsiderationDocflow {
         editDocumentSteps.addTextBeforeConsiderationAndOk("Согласовать с замечаниями");
 
         getWebDriver().switchTo().window(parentWindowHandler);  // окно задачи закрывается
-        open(urlDocInWeb_1);
+        open(urlDocInWeb);
+        editDocumentSteps.waitDocument();
         editDocumentSteps.routesTab();
         editDocumentRouteTabElements.statusBlockDiagramIsReviewedWithComment("Произвольная рабочая группа", employee[0].getLastName()).shouldBe(visible);
         editDocumentSteps.verifyButtonsOfConsiderationIsNotVisible();
@@ -311,7 +315,8 @@ public class ConsiderationDocumentTest extends ConsiderationDocflow {
         editDocumentSteps.addTextBeforeConsiderationAndOk("Отказаться согласовать");
 
         getWebDriver().switchTo().window(parentWindowHandler);  // окно задачи закрывается
-        open(urlDocInWeb_1);
+        open(urlDocInWeb);
+        editDocumentSteps.waitDocument();
         editDocumentSteps.routesTab();
         editDocumentRouteTabElements.statusBlockDiagramIsReviewedWithComment("Произвольная рабочая группа", employee[0].getLastName()).shouldBe(visible);
         editDocumentRouteTabElements.statusBlockDiagramIsDenialReview("Произвольный начальник", employee[1].getLastName()).shouldBe(visible);
