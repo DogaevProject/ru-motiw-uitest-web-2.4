@@ -76,10 +76,14 @@ public class GridOfFoldersSteps extends InternalStepsMobile {
     public void clickContextMenuForItemInGrid(String nameOfItem) {
         gridOfFolderElementsMobile.getItemInTheGrid(nameOfItem).waitUntil(visible, 5000);
         if ((gridOfFolderElementsMobile.getButtonOfCloseContextMenu(nameOfItem).is(visible))) {
-            // click ContextMenu
-            gridOfFolderElementsMobile.getButtonOfCloseContextMenu(nameOfItem).click();
-            // Проверяем, что Кнопка открытия конт.меню появилась
-            gridOfFolderElementsMobile.getButtonOfOpenContextMenu(nameOfItem).shouldBe(visible);
+            try {
+                // click ContextMenu
+                gridOfFolderElementsMobile.getButtonOfCloseContextMenu(nameOfItem).click(); // иногда КМ само закрывается
+            } catch (ElementNotFound ignored) {
+            } finally {
+                // Проверяем, что Кнопка открытия конт.меню появилась
+                gridOfFolderElementsMobile.getButtonOfOpenContextMenu(nameOfItem).shouldBe(visible);
+            }
             // Проверяем, что конт.меню закрылось
             gridOfFolderElementsMobile.getContextMenu().shouldNotBe(visible);
         } else {
