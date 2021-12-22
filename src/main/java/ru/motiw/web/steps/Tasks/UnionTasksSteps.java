@@ -7,6 +7,7 @@ import com.codeborne.selenide.ex.ElementShould;
 import com.codeborne.selenide.ex.UIAssertionError;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -259,7 +260,7 @@ public class UnionTasksSteps extends BaseSteps {
 
         try {
             $(By.xpath("//iframe[contains(@src,'/user/smart_folder')]")).waitUntil(visible, 10000);
-        } catch (ElementShould e) {
+        } catch (ElementShould | NoSuchFrameException e) {
             // Обработка случая когда открытие папки зависает
             goToUnionTasks();
             beforeAddFolder(21);
